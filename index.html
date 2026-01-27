@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT_STOREE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">GPT <span>STORE</span></div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="selecoes.html">Seleções</a></li>
+            <li><a href="clubes.html">Clubes</a></li>
+            <li><a href="ofertas.html">Ofertas</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Buscar produtos...">
+            </div>
+            <a href="carrinho.html" class="carrinho">
+                <span>🛒</span>
+                <span id="contador-carrinho">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>⚽ GPT_STOREE ⚽</h1>
+        <p>A tua loja de mantos sagrados</p>
+    </header>
+
+    <div class="container-produtos">
+        <div class="card">
+            <img src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" alt="Camisa Seleção Brasileira 1"
+                onclick="window.location.href='Pagina_produto_selecao_1.html'" style="cursor: pointer;">
+            <h3>Camisa Seleção Brasileira I 2026</h3>
+            <p>R$ 299,90</p>
+            <button onclick="window.location.href='Pagina_produto_selecao_1.html'">Comprar</button>
+        </div>
+
+        <div class="card">
+            <img src="imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp" alt="Camisa Seleção Brasil"
+                onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
+            <h3>Camisa Seleção Brasil II 2026</h3>
+            <p>R$ 199,90</p>
+            <!-- Botão corrigido para usar onclick em vez de aninhamento inválido -->
+            <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>GPT STORE</h4>
+                <p>A sua loja especializada em camisas de futebol. Qualidade e paixão em cada detalhe.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="selecoes.html">Seleções</a></li>
+                    <li><a href="clubes.html">Clubes</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contato</h4>
+                <ul>
+                    <li><a href="#">WhatsApp: (41) 99565-5320</a></li>
+                    <li><a href="#">Email: contato@gptstore.com</a></li>
+                    <li><a href="#">Instagram: @gpt_store</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 GPT STORE. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

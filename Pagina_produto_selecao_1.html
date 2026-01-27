@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Produto - Camisa Seleção Brasileira I 2026</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">GPT <span>STORE</span></div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="selecoes.html">Seleções</a></li>
+            <li><a href="clubes.html">Clubes</a></li>
+            <li><a href="ofertas.html">Ofertas</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Buscar produtos...">
+            </div>
+            <a href="carrinho.html" class="carrinho">
+                <span>🛒</span>
+                <span id="contador-carrinho">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="produto-container">
+        <div class="thumbnails">
+            <!-- Usando a imagem principal como miniatura pois as outras não foram especificadas -->
+            <img src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" onclick="trocarImagem(this.src)"
+                alt="Frente">
+            <img src="imagens/Camisas-time/Seleção Brasileira 1/emblema.webp" onclick="trocarImagem(this.src)"
+                alt="Escudo">
+            <img src="imagens/Camisas-time/Seleção Brasileira 1/gola.webp" onclick="trocarImagem(this.src)" alt="Gola">
+            <img src="imagens/Camisas-time/Seleção Brasileira 1/Costas.webp" onclick="trocarImagem(this.src)"
+                alt="Costas">
+            <img src="imagens/Camisas-time/Seleção Brasileira 1/lateral.webp" onclick="trocarImagem(this.src)"
+                alt="Detalhe Lateral">
+
+        </div>
+
+        <div class="main-img-container">
+            <img id="imagemPrincipal" src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp"
+                alt="Camisa Seleção Brasileira I">
+        </div>
+
+        <div class="info">
+            <h2>Camisa Seleção Brasileira I</h2>
+            <p class="preco-destaque">R$ 299,90</p>
+
+            <div class="seletor-tamanho">
+                <p>Tamanho: <span id="tamanho-selecionado">P</span></p>
+                <div class="botoes-tamanho">
+                    <button type="button" class="btn-tam ativo" onclick="selecionarTamanho(this)">P</button>
+                    <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">M</button>
+                    <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">G</button>
+                    <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">GG</button>
+                    <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">GGG</button>
+                </div>
+            </div>
+
+            <div class="acoes-compra">
+                <button class="btn-comprar" onclick="finalizarCompra()">
+                    COMPRAR AGORA
+                </button>
+            </div>
+
+            <div class="frete-container">
+                <div class="frete-titulo">
+                    <span>🚚</span> Meios de envio
+                </div>
+
+                <div class="frete-input-group">
+                    <input type="text" id="cep-input" placeholder="Seu CEP" maxlength="9">
+                    <button onclick="calcularFrete()">CALCULAR</button>
+                </div>
+
+                <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank"
+                    class="link-cep">Não sei meu CEP</a>
+
+                <div id="resultado-frete" class="resultado-oculto"></div>
+            </div>
+            <div class="personalizacao-container">
+                <p>Personalize aqui: <span id="status-personalizacao">Sem personalização</span></p>
+
+                <div class="botoes-personalizar">
+                    <button type="button" id="btn-sem-perso" class="btn-opt ativo"
+                        onclick="alternarPersonalizacao(false)">Sem personalização</button>
+                    <button type="button" id="btn-com-perso" class="btn-opt" onclick="alternarPersonalizacao(true)">Com
+                        personalização</button>
+                </div>
+
+                <div id="campos-personalizar" class="resultado-oculto">
+                    <div class="input-grupo">
+                        <label>Nome nas costas:</label>
+                        <input type="text" id="nome-camisa" placeholder="Ex: NEYMAR JR" maxlength="15">
+                    </div>
+                    <div class="input-grupo">
+                        <label>Número:</label>
+                        <input type="number" id="numero-camisa" placeholder="10" min="1" max="99">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>GPT STORE</h4>
+                <p>A sua loja especializada em camisas de futebol. Qualidade e paixão em cada detalhe.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="selecoes.html">Seleções</a></li>
+                    <li><a href="clubes.html">Clubes</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contato</h4>
+                <ul>
+                    <li><a href="#">WhatsApp: (41) 99565-5320</a></li>
+                    <li><a href="#">Email: contato@gptstore.com</a></li>
+                    <li><a href="#">Instagram: @gpt_store</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 GPT STORE. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
