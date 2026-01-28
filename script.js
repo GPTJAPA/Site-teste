@@ -33,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // Calcula e exibe o preço do Pix automaticamente
+  calcularPrecoPix();
 });
 
 function atualizarContadorCarrinho() {
@@ -106,44 +109,50 @@ function alternarPersonalizacao(querPersonalizar) {
 function finalizarCompra() {
   const tamanho = document.getElementById("tamanho-selecionado").innerText;
   const nomeProduto = document.querySelector(".info h2").innerText;
-  // Pega o preço, remove "R$", troca vírgula por ponto e converte para número
-  const precoTexto = document.querySelector(".info p").innerText.split("R$")[1];
-  const preco = parseFloat(precoTexto.replace(",", ".").trim());
   const imagemSrc = document.getElementById("imagemPrincipal").src;
 
-  const isPersonalizado = !document
-    .getElementById("campos-personalizar")
-    .classList.contains("resultado-oculto");
-  let mensagem = `Sucesso! ✅\nCamisa Tamanho ${tamanho}`;
+  // 1. Pegar o preço base
+  const precoElemento = document.querySelector(".preco-destaque");
+  // Pega apenas o texto do preço atual, ignorando o span do preço antigo se houver
+  const textoPreco = precoElemento.childNodes[0].textContent;
+  let precoFinal = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+
+  // 2. Definir o custo da personalização
+  const CUSTO_PERSONALIZACAO = 25.00;
+
+  // 3. Verificar se a personalização está visível/ativa
+  const areaPersonalizar = document.getElementById("campos-personalizar");
+  const isPersonalizado = !areaPersonalizar.classList.contains("resultado-oculto");
+
+  let detalhesPersonalizacao = "Sem personalização";
 
   if (isPersonalizado) {
-    const nome = document.getElementById("nome-camisa").value;
-    const numero = document.getElementById("numero-camisa").value;
+    const nome = document.getElementById("nome-camisa").value.trim().toUpperCase();
+    const numero = document.getElementById("numero-camisa").value.trim();
+
     if (!nome || !numero) {
-      alert("Por favor, preencha o Nome e Número para a personalização.");
+      alert("⚠️ Por favor, preencha o Nome e o Número para personalizar!");
       return;
     }
-    mensagem += ` com o nome ${nome} e número ${numero}`;
+
+    // 4. SOMA OS 25 REAIS AO PREÇO
+    precoFinal += CUSTO_PERSONALIZACAO;
+    detalhesPersonalizacao = `${nome} (${numero})`;
   }
 
-  mensagem += " adicionada ao carrinho!";
-
-  // Cria o objeto do produto
+  // 5. Criação do objeto com o preço já atualizado
   const produto = {
     nome: nomeProduto,
-    preco: preco,
+    preco: precoFinal,
     tamanho: tamanho,
     imagem: imagemSrc,
-    personalizacao: isPersonalizado
-      ? `${document.getElementById("nome-camisa").value} (${document.getElementById("numero-camisa").value})`
-      : "Sem personalização",
+    personalizacao: detalhesPersonalizacao,
     quantidade: 1,
   };
 
-  // Salva no localStorage (Array de objetos)
+  // Guardar no localStorage (mantendo a lógica de agrupar itens iguais)
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-  // Verifica se o item já existe (mesmo nome, tamanho e personalização)
   const indexExistente = carrinho.findIndex(
     (item) =>
       item.nome === produto.nome &&
@@ -162,7 +171,9 @@ function finalizarCompra() {
 
   atualizarContadorCarrinho();
 
-  alert(mensagem);
+  // 6. Alerta mostrando o novo valor
+  const precoFormatado = precoFinal.toFixed(2).replace(".", ",");
+  alert(`Sucesso! ✅\nItem adicionado: ${nomeProduto}\nValor Total: R$ ${precoFormatado}`);
 }
 
 function renderizarCarrinho() {
@@ -269,5 +280,55 @@ function esvaziarCarrinho() {
     localStorage.removeItem("carrinho");
     renderizarCarrinho();
     atualizarContadorCarrinho();
+  }
+}
+
+function filtrarProdutos(categoria) {
+  const cards = document.querySelectorAll(".card");
+  const botoes = document.querySelectorAll(".btn-filtro");
+
+  // 1. Atualiza o aspeto visual dos botões
+  botoes.forEach((btn) => {
+    btn.classList.remove("ativo");
+    // Normaliza o texto para remover acentos (ex: Seleções -> selecoes) para comparar corretamente
+    const textoNormalizado = btn.innerText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (textoNormalizado === categoria || (categoria === "todos" && btn.innerText === "Todos")) {
+      btn.classList.add("ativo");
+    }
+  });
+
+  // 2. Filtra os produtos
+  cards.forEach((card) => {
+    const categoriaDoCard = card.getAttribute("data-categoria");
+
+    if (categoria === "todos" || categoriaDoCard === categoria) {
+      card.classList.remove("escondido");
+    } else {
+      card.classList.add("escondido");
+    }
+  });
+}
+
+function calcularPrecoPix() {
+  const precoElemento = document.querySelector(".preco-destaque");
+  
+  // Se não houver preço na página (ex: home), a função para aqui
+  if (!precoElemento) return;
+
+  // Pega apenas o texto do preço (primeiro nó de texto), ignorando o preço antigo (span)
+  const textoPreco = precoElemento.childNodes[0].textContent;
+  
+  // Limpa a string: remove "R$", remove pontos de milhar e troca vírgula por ponto
+  const valorNumerico = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+
+  if (!isNaN(valorNumerico)) {
+    const valorPix = valorNumerico * 0.95; // Aplica 5% de desconto
+    
+    const pPix = document.createElement("p");
+    pPix.classList.add("preco-pix");
+    pPix.innerHTML = `R$ ${valorPix.toFixed(2).replace(".", ",")} com <strong>Pix</strong> (5% de desconto)`;
+    
+    // Insere o elemento logo após o preço principal
+    precoElemento.after(pPix);
   }
 }

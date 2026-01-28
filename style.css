@@ -250,6 +250,14 @@ header.hero {
   margin-left: 10px;
 }
 
+/* Preço com desconto no Pix */
+.preco-pix {
+  color: #28a745;
+  font-size: 1rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
 /* Seletor de Tamanho */
 .seletor-tamanho {
   margin: 20px 0;
@@ -699,4 +707,32 @@ footer {
     width: 100%;
     border-radius: 4px;
   }
+}
+
+/* --- Filtros --- */
+.filtros-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.btn-filtro {
+  padding: 10px 20px;
+  border: 1px solid #333;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-filtro.ativo, .btn-filtro:hover {
+  background-color: #333;
+  color: white;
+}
+
+/* Classe para esconder os cards com suavidade */
+.escondido {
+  display: none !important;
 }

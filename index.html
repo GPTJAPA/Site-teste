@@ -35,8 +35,23 @@
         <p>A tua loja de mantos sagrados</p>
     </header>
 
+    <div class="filtros-container">
+        <button class="btn-filtro ativo" onclick="filtrarProdutos('todos')">Todos</button>
+        <button class="btn-filtro" onclick="filtrarProdutos('selecoes')">Seleções</button>
+        <button class="btn-filtro" onclick="filtrarProdutos('clubes')">Clubes</button>
+        <button class="btn-filtro" onclick="filtrarProdutos('ofertas')">Ofertas</button>
+    </div>
+
     <div class="container-produtos">
-        <div class="card">
+        <div class="card" data-categoria="clubes">
+            <img src="imagens/Camisas-time/Coritiba.jpeg" alt="Camisa Coritiba"
+                onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
+            <h3>Camisa Coritiba Titular 2024</h3>
+            <p>R$ 299,90</p>
+            <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+        </div>
+
+        <div class="card" data-categoria="selecoes">
             <img src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" alt="Camisa Seleção Brasileira 1"
                 onclick="window.location.href='Pagina_produto_selecao_1.html'" style="cursor: pointer;">
             <h3>Camisa Seleção Brasileira I 2026</h3>
@@ -44,7 +59,7 @@
             <button onclick="window.location.href='Pagina_produto_selecao_1.html'">Comprar</button>
         </div>
 
-        <div class="card">
+        <div class="card" data-categoria="selecoes">
             <img src="imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp" alt="Camisa Seleção Brasil"
                 onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
             <h3>Camisa Seleção Brasil II 2026</h3>
