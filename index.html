@@ -12,6 +12,12 @@
     <nav class="navbar">
         <div class="logo">GPT <span>STORE</span></div>
 
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
         <ul class="nav-links">
             <li><a href="index.html">Início</a></li>
             <li><a href="selecoes.html">Seleções</a></li>
@@ -30,20 +36,48 @@
         </div>
     </nav>
 
+    <!-- Banner Carrossel -->
+    <div class="carousel-container">
+        <div class="carousel-slide fade">
+            <div class="banner-content" style="background: linear-gradient(135deg, #1a1a1a, #28a745);">
+                <h2>OFERTAS DA SEMANA</h2>
+                <p>Descontos de até 50% no Pix</p>
+                <button class="btn-banner" onclick="window.location.href='ofertas.html'">Confira</button>
+            </div>
+        </div>
+        <div class="carousel-slide fade">
+            <div class="banner-content" style="background: linear-gradient(135deg, #000000, #333333);">
+                <h2>NOVOS MANTOS</h2>
+                <p>As camisas da temporada 2026 chegaram</p>
+                <button class="btn-banner" onclick="window.location.href='ofertas.html'">Confira</button>
+            </div>
+        </div>
+        <div class="carousel-slide fade">
+            <div class="banner-content" style="background: linear-gradient(135deg, #004085, #007bff);">
+                <h2>FRETE GRÁTIS</h2>
+                <p>Para todo o Brasil em compras acima de R$ 299</p>
+                <button class="btn-banner" onclick="window.location.href='ofertas.html'">Confira</button>
+            </div>
+        </div>
+
+        <!-- Setas de Navegação -->
+        <a class="prev" onclick="mudarSlide(-1)">&#10094;</a>
+        <a class="next" onclick="mudarSlide(1)">&#10095;</a>
+
+        <div class="carousel-dots">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+    </div>
+
     <header class="hero">
         <h1>⚽ GPT_STOREE ⚽</h1>
         <p>A tua loja de mantos sagrados</p>
     </header>
 
-    <div class="filtros-container">
-        <button class="btn-filtro ativo" onclick="filtrarProdutos('todos')">Todos</button>
-        <button class="btn-filtro" onclick="filtrarProdutos('selecoes')">Seleções</button>
-        <button class="btn-filtro" onclick="filtrarProdutos('clubes')">Clubes</button>
-        <button class="btn-filtro" onclick="filtrarProdutos('ofertas')">Ofertas</button>
-    </div>
-
     <div class="container-produtos">
-        <div class="card" data-categoria="clubes">
+        <div class="card">
             <img src="imagens/Camisas-time/Coritiba.jpeg" alt="Camisa Coritiba"
                 onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
             <h3>Camisa Coritiba Titular 2024</h3>
@@ -51,7 +85,7 @@
             <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
         </div>
 
-        <div class="card" data-categoria="selecoes">
+        <div class="card">
             <img src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" alt="Camisa Seleção Brasileira 1"
                 onclick="window.location.href='Pagina_produto_selecao_1.html'" style="cursor: pointer;">
             <h3>Camisa Seleção Brasileira I 2026</h3>
@@ -59,7 +93,7 @@
             <button onclick="window.location.href='Pagina_produto_selecao_1.html'">Comprar</button>
         </div>
 
-        <div class="card" data-categoria="selecoes">
+        <div class="card">
             <img src="imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp" alt="Camisa Seleção Brasil"
                 onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
             <h3>Camisa Seleção Brasil II 2026</h3>
@@ -97,6 +131,9 @@
             &copy; 2024 GPT STORE. Todos os direitos reservados.
         </div>
     </footer>
+
+    <!-- Botão Voltar ao Topo -->
+    <button onclick="subirTopo()" id="btn-topo" title="Voltar ao topo">⬆</button>
 
     <script src="script.js"></script>
 </body>

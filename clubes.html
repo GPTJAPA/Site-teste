@@ -4,13 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clubes - GPT_STOREE</title>
+    <title>Clubes - GPT STORE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <nav class="navbar">
         <div class="logo">GPT <span>STORE</span></div>
+
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
 
         <ul class="nav-links">
             <li><a href="index.html">Início</a></li>
@@ -31,17 +37,66 @@
     </nav>
 
     <header class="hero">
-        <h1>Clubes do Mundo</h1>
-        <p>A paixão pelo seu time começa aqui</p>
+        <h1>⚽ Clubes do Mundo ⚽</h1>
+        <p>Vista as cores do seu time do coração</p>
     </header>
 
-    <div class="container-produtos">
-        <div class="card">
-            <img src="imagens/Camisas-time/Coritiba.jpeg" alt="Camisa Coritiba"
-                onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
-            <h3>Camisa Coritiba Titular 2024</h3>
-            <p>R$ 299,90</p>
-            <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+    <!-- Abas de Navegação -->
+    <div class="abas-categorias">
+        <button class="btn-aba ativo" onclick="filtrarCategoria('todos', this)">Todos</button>
+        <button class="btn-aba" onclick="filtrarCategoria('brasileirao', this)">Brasileirão</button>
+        <button class="btn-aba" onclick="filtrarCategoria('laliga', this)">La Liga</button>
+        <button class="btn-aba" onclick="filtrarCategoria('premier', this)">Premier League</button>
+    </div>
+
+    <!-- Categoria: Brasileirão -->
+    <div id="brasileirao" class="secao-categoria">
+        <h2 class="titulo-categoria">Brasileirão 🇧🇷</h2>
+        <div class="container-produtos">
+            <div class="card">
+                <img src="imagens/Camisas-time/Coritiba.jpeg" alt="Camisa Coritiba"
+                    onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
+                <h3>Camisa Coritiba Titular 2024</h3>
+                <p class="preco-destaque">R$ 299,90</p>
+                <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+            </div>
+            
+            <!-- Adicione mais times do Brasileirão aqui -->
+        </div>
+    </div>
+
+    <!-- Categoria: La Liga -->
+    <div id="laliga" class="secao-categoria">
+        <h2 class="titulo-categoria">La Liga 🇪🇸</h2>
+        <div class="container-produtos">
+            <div class="card">
+                <!-- Exemplo Genérico (Substitua pela imagem do Real Madrid/Barcelona) -->
+                <img src="imagens/Camisas-time/Coritiba.jpeg" alt="Camisa Real Madrid" style="filter: grayscale(100%);">
+                <h3>Camisa Real Madrid 2024</h3>
+                <p class="preco-destaque">R$ 349,90</p>
+                <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+            </div>
+            
+            <div class="card">
+                <img src="imagens/Camisas-time/Coritiba.jpeg" alt="Camisa Barcelona" style="filter: grayscale(100%);">
+                <h3>Camisa Barcelona 2024</h3>
+                <p class="preco-destaque">R$ 349,90</p>
+                <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categoria: Premier League -->
+    <div id="premier" class="secao-categoria">
+        <h2 class="titulo-categoria">Premier League 🏴󠁧󠁢󠁥󠁮󠁧󠁿</h2>
+        <div class="container-produtos">
+            <div class="card">
+                <!-- Exemplo Genérico -->
+                <img src="imagens/Camisas-time/Coritiba.jpeg" alt="Camisa Man. City" style="filter: grayscale(100%);">
+                <h3>Camisa Manchester City 2024</h3>
+                <p class="preco-destaque">R$ 329,90</p>
+                <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+            </div>
         </div>
     </div>
 
@@ -73,6 +128,9 @@
             &copy; 2024 GPT STORE. Todos os direitos reservados.
         </div>
     </footer>
+
+    <!-- Botão Voltar ao Topo -->
+    <button onclick="subirTopo()" id="btn-topo" title="Voltar ao topo">⬆</button>
 
     <script src="script.js"></script>
 </body>

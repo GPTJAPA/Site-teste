@@ -12,6 +12,12 @@
     <nav class="navbar">
         <div class="logo">GPT <span>STORE</span></div>
 
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
         <ul class="nav-links">
             <li><a href="index.html">Início</a></li>
             <li><a href="selecoes.html">Seleções</a></li>
@@ -35,21 +41,47 @@
         <p>Vista as cores do seu país com orgulho</p>
     </header>
 
-    <div class="container-produtos">
-        <div class="card">
-            <img src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" alt="Camisa Seleção Brasileira I"
-                onclick="window.location.href='Pagina_produto_selecao_1.html'" style="cursor: pointer;">
-            <h3>Camisa Seleção Brasileira I</h3>
-            <p>R$ 299,90</p>
-            <button onclick="window.location.href='Pagina_produto_selecao_1.html'">Comprar</button>
-        </div>
+    <!-- Abas de Navegação -->
+    <div class="abas-categorias">
+        <button class="btn-aba ativo" onclick="filtrarCategoria('todos', this)">Todos</button>
+        <button class="btn-aba" onclick="filtrarCategoria('americasul', this)">América do Sul</button>
+        <button class="btn-aba" onclick="filtrarCategoria('europa', this)">Europa</button>
+    </div>
 
-        <div class="card">
-            <img src="imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp" alt="Camisa Seleção Brasil"
-                onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
-            <h3>Camisa Seleção Brasil II 2026</h3>
-            <p>R$ 199,90</p>
-            <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+    <!-- Categoria: América do Sul -->
+    <div id="americasul" class="secao-categoria">
+        <h2 class="titulo-categoria">América do Sul 🌎</h2>
+        <div class="container-produtos">
+            <div class="card">
+                <img src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" alt="Camisa Seleção Brasileira I"
+                    onclick="window.location.href='Pagina_produto_selecao_1.html'" style="cursor: pointer;">
+                <h3>Camisa Seleção Brasileira I</h3>
+                <p class="preco-destaque">R$ 299,90</p>
+                <button onclick="window.location.href='Pagina_produto_selecao_1.html'">Comprar</button>
+            </div>
+
+            <div class="card">
+                <img src="imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp" alt="Camisa Seleção Brasil"
+                    onclick="window.location.href='Pagina_produto.html'" style="cursor: pointer;">
+                <h3>Camisa Seleção Brasil II 2026</h3>
+                <p class="preco-destaque">R$ 199,90</p>
+                <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categoria: Europa -->
+    <div id="europa" class="secao-categoria">
+        <h2 class="titulo-categoria">Europa 🇪🇺</h2>
+        <div class="container-produtos">
+            <div class="card">
+                <!-- Exemplo Genérico (Placeholder) -->
+                <img src="imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" alt="Camisa França"
+                    style="filter: grayscale(100%); cursor: pointer;" onclick="window.location.href='Pagina_produto.html'">
+                <h3>Camisa França Titular 2024</h3>
+                <p class="preco-destaque">R$ 299,90</p>
+                <button onclick="window.location.href='Pagina_produto.html'">Comprar</button>
+            </div>
         </div>
     </div>
 
@@ -81,6 +113,9 @@
             &copy; 2024 GPT STORE. Todos os direitos reservados.
         </div>
     </footer>
+
+    <!-- Botão Voltar ao Topo -->
+    <button onclick="subirTopo()" id="btn-topo" title="Voltar ao topo">⬆</button>
 
     <script src="script.js"></script>
 </body>

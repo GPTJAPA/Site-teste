@@ -19,23 +19,120 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Lógica da Barra de Pesquisa
-  const searchInput = document.getElementById("search-input");
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      const termo = e.target.value.toLowerCase();
-      const cards = document.querySelectorAll(".card");
+  // --- Lógica da Barra de Pesquisa Global (Autocomplete) ---
+  
+  // 1. Banco de dados simulado com todos os produtos do site
+  const produtosDB = [
+    { nome: "Camisa Coritiba Titular 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" },
+    { nome: "Camisa Seleção Brasileira I 2026", url: "Pagina_produto_selecao_1.html", img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" },
+    { nome: "Camisa Seleção Brasil II 2026", url: "Pagina_produto.html", img: "imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp" },
+    { nome: "Camisa Real Madrid 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" }, // Imagem ilustrativa baseada no contexto
+    { nome: "Camisa Barcelona 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" },
+    { nome: "Camisa Manchester City 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" },
+    { nome: "Camisa França Titular 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" }
+  ];
 
-      cards.forEach((card) => {
-        const titulo = card.querySelector("h3").innerText.toLowerCase();
-        // Se o título contém o termo, mostra; senão, esconde.
-        card.style.display = titulo.includes(termo) ? "" : "none";
-      });
+  const searchInput = document.getElementById("search-input");
+  const searchBox = document.querySelector(".search-box");
+
+  if (searchInput && searchBox) {
+    // Cria o container de resultados dinamicamente
+    const resultsContainer = document.createElement("div");
+    resultsContainer.classList.add("search-results");
+    searchBox.appendChild(resultsContainer);
+
+    searchInput.addEventListener("input", (e) => {
+      // Normaliza o texto (remove acentos e põe em minúsculo)
+      const termo = e.target.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      resultsContainer.innerHTML = "";
+
+      if (termo.length === 0) {
+        resultsContainer.classList.remove("ativo");
+        return;
+      }
+
+      // Filtra os produtos
+      const resultados = produtosDB.filter(produto => 
+        produto.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(termo)
+      );
+
+      if (resultados.length > 0) {
+        resultados.forEach(produto => {
+          const item = document.createElement("div");
+          item.classList.add("search-item");
+          item.innerHTML = `
+            <img src="${produto.img}" alt="${produto.nome}">
+            <div>${produto.nome}</div>
+          `;
+          // Redireciona ao clicar
+          item.onclick = () => window.location.href = produto.url;
+          resultsContainer.appendChild(item);
+        });
+      } else {
+        const item = document.createElement("div");
+        item.classList.add("search-item");
+        item.innerHTML = `<div>Nenhum produto encontrado</div>`;
+        resultsContainer.appendChild(item);
+      }
+
+      resultsContainer.classList.add("ativo");
+    });
+
+    // Fecha a busca ao clicar fora
+    document.addEventListener("click", (e) => {
+      if (!searchBox.contains(e.target)) {
+        resultsContainer.classList.remove("ativo");
+      }
     });
   }
 
   // Calcula e exibe o preço do Pix automaticamente
   calcularPrecoPix();
+
+  // Força o nome da personalização a ser maiúsculo enquanto digita
+  const inputNome = document.getElementById("nome-camisa");
+  if (inputNome) {
+    inputNome.addEventListener("input", (e) => {
+      e.target.value = e.target.value.toUpperCase();
+    });
+  }
+
+  // Fecha o modal se clicar fora dele
+  window.addEventListener("click", (event) => {
+    const modal = document.getElementById("modal-medidas");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+
+  // Inicia o carrossel se houver slides na página
+  iniciarCarrossel();
+
+  // Lógica do Botão Voltar ao Topo
+  const btnTopo = document.getElementById("btn-topo");
+  window.addEventListener("scroll", () => {
+    if (btnTopo) {
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btnTopo.style.display = "block";
+      } else {
+        btnTopo.style.display = "none";
+      }
+    }
+  });
+
+  // Fecha o menu mobile automaticamente ao clicar em um link
+  const linksMenu = document.querySelectorAll(".nav-links a");
+  const menuNav = document.querySelector(".nav-links");
+  const menuToggle = document.querySelector(".menu-toggle");
+
+  if (menuNav) {
+    linksMenu.forEach((link) => {
+      link.addEventListener("click", () => {
+        menuNav.classList.remove("active");
+        if (menuToggle) menuToggle.classList.remove("active");
+      });
+    });
+  }
 });
 
 function atualizarContadorCarrinho() {
@@ -77,7 +174,7 @@ function calcularFrete() {
   const campoResultado = document.getElementById("resultado-frete");
 
   if (cep.length !== 8) {
-    alert("Por favor, digite um CEP válido.");
+    mostrarNotificacao("Por favor, digite um CEP válido.", "erro");
     return;
   }
 
@@ -92,88 +189,132 @@ function alternarPersonalizacao(querPersonalizar) {
   const status = document.getElementById("status-personalizacao");
   const btnCom = document.getElementById("btn-com-perso");
   const btnSem = document.getElementById("btn-sem-perso");
+  const precoElemento = document.querySelector(".preco-destaque");
+
+  // Salva o preço base original na primeira vez que a função é chamada
+  if (precoElemento && !precoElemento.dataset.precoBase) {
+    const textoPreco = precoElemento.childNodes[0].textContent;
+    precoElemento.dataset.precoBase = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+  }
+
+  const precoBase = precoElemento ? parseFloat(precoElemento.dataset.precoBase) : 0;
 
   if (querPersonalizar) {
     campos.classList.remove("resultado-oculto");
-    status.innerText = "Com personalização";
+    status.innerText = "Com personalização (+ R$ 25,00)";
     btnCom.classList.add("ativo");
     btnSem.classList.remove("ativo");
+    
+    // Atualiza o preço visualmente na tela
+    if (precoElemento) {
+      precoElemento.childNodes[0].textContent = `R$ ${(precoBase + 25).toFixed(2).replace(".", ",")} `;
+    }
   } else {
     campos.classList.add("resultado-oculto");
     status.innerText = "Sem personalização";
     btnSem.classList.add("ativo");
     btnCom.classList.remove("ativo");
+
+    // Restaura o preço original visualmente
+    if (precoElemento) {
+      precoElemento.childNodes[0].textContent = `R$ ${precoBase.toFixed(2).replace(".", ",")} `;
+    }
   }
+
+  // Recalcula o valor do Pix com o novo preço exibido
+  calcularPrecoPix();
 }
 
 function finalizarCompra() {
-  const tamanho = document.getElementById("tamanho-selecionado").innerText;
-  const nomeProduto = document.querySelector(".info h2").innerText;
-  const imagemSrc = document.getElementById("imagemPrincipal").src;
-
-  // 1. Pegar o preço base
-  const precoElemento = document.querySelector(".preco-destaque");
-  // Pega apenas o texto do preço atual, ignorando o span do preço antigo se houver
-  const textoPreco = precoElemento.childNodes[0].textContent;
-  let precoFinal = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
-
-  // 2. Definir o custo da personalização
-  const CUSTO_PERSONALIZACAO = 25.00;
-
-  // 3. Verificar se a personalização está visível/ativa
+  // 1. Validação (Antes do Loading)
   const areaPersonalizar = document.getElementById("campos-personalizar");
   const isPersonalizado = !areaPersonalizar.classList.contains("resultado-oculto");
-
-  let detalhesPersonalizacao = "Sem personalização";
+  let nome = "";
+  let numero = "";
 
   if (isPersonalizado) {
-    const nome = document.getElementById("nome-camisa").value.trim().toUpperCase();
-    const numero = document.getElementById("numero-camisa").value.trim();
+    nome = document.getElementById("nome-camisa").value.trim().toUpperCase();
+    numero = document.getElementById("numero-camisa").value.trim();
 
     if (!nome || !numero) {
-      alert("⚠️ Por favor, preencha o Nome e o Número para personalizar!");
+      mostrarNotificacao("Preencha Nome e Número para personalizar!", "erro");
       return;
     }
-
-    // 4. SOMA OS 25 REAIS AO PREÇO
-    precoFinal += CUSTO_PERSONALIZACAO;
-    detalhesPersonalizacao = `${nome} (${numero})`;
   }
 
-  // 5. Criação do objeto com o preço já atualizado
-  const produto = {
-    nome: nomeProduto,
-    preco: precoFinal,
-    tamanho: tamanho,
-    imagem: imagemSrc,
-    personalizacao: detalhesPersonalizacao,
-    quantidade: 1,
-  };
+  // 2. Ativa o efeito de Loading
+  const btn = document.querySelector(".btn-comprar");
+  const textoOriginal = btn.innerText;
+  
+  btn.innerText = "Adicionando... ⏳";
+  btn.disabled = true;
+  btn.style.opacity = "0.7";
+  btn.style.cursor = "not-allowed";
 
-  // Guardar no localStorage (mantendo a lógica de agrupar itens iguais)
-  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  // 3. Simula o tempo de processamento
+  setTimeout(() => {
+    const tamanho = document.getElementById("tamanho-selecionado").innerText;
+    const nomeProduto = document.querySelector(".info h2").innerText;
+    const imagemSrc = document.getElementById("imagemPrincipal").src;
 
-  const indexExistente = carrinho.findIndex(
-    (item) =>
-      item.nome === produto.nome &&
-      item.tamanho === produto.tamanho &&
-      item.personalizacao === produto.personalizacao,
-  );
+    // Lógica de Preço
+    const precoElemento = document.querySelector(".preco-destaque");
+    let precoFinal;
 
-  if (indexExistente !== -1) {
-    carrinho[indexExistente].quantidade =
-      (carrinho[indexExistente].quantidade || 1) + 1;
-  } else {
-    carrinho.push(produto);
-  }
+    if (precoElemento.dataset.precoBase) {
+      precoFinal = parseFloat(precoElemento.dataset.precoBase);
+    } else {
+      const textoPreco = precoElemento.childNodes[0].textContent;
+      precoFinal = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+    }
 
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+    const CUSTO_PERSONALIZACAO = 25.00;
+    let detalhesPersonalizacao = "Sem personalização";
 
-  atualizarContadorCarrinho();
+    if (isPersonalizado) {
+      precoFinal += CUSTO_PERSONALIZACAO;
+      detalhesPersonalizacao = `${nome} (${numero})`;
+    }
 
-  // 6. Alerta mostrando o novo valor
-  const precoFormatado = precoFinal.toFixed(2).replace(".", ",");
-  alert(`Sucesso! ✅\nItem adicionado: ${nomeProduto}\nValor Total: R$ ${precoFormatado}`);
+    // Criação do objeto
+    const produto = {
+      nome: nomeProduto,
+      preco: precoFinal,
+      tamanho: tamanho,
+      imagem: imagemSrc,
+      personalizacao: detalhesPersonalizacao,
+      quantidade: 1,
+    };
+
+    // Salvar no localStorage
+    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    const indexExistente = carrinho.findIndex(
+      (item) =>
+        item.nome === produto.nome &&
+        item.tamanho === produto.tamanho &&
+        item.personalizacao === produto.personalizacao,
+    );
+
+    if (indexExistente !== -1) {
+      carrinho[indexExistente].quantidade =
+        (carrinho[indexExistente].quantidade || 1) + 1;
+    } else {
+      carrinho.push(produto);
+    }
+
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+    atualizarContadorCarrinho();
+
+    // 4. Restaura o botão e mostra sucesso
+    btn.innerText = textoOriginal;
+    btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
+
+    const precoFormatado = precoFinal.toFixed(2).replace(".", ",");
+    mostrarNotificacao(`Adicionado ao carrinho!<br><strong>${nomeProduto}</strong><br>Total: R$ ${precoFormatado}`, "sucesso");
+
+  }, 1000); // 1 segundo de delay
 }
 
 function renderizarCarrinho() {
@@ -225,7 +366,9 @@ function alterarQuantidade(index, mudanca) {
   // Se a quantidade for 0 ou menor, remove o item (com confirmação opcional)
   if (carrinho[index].quantidade <= 0) {
     if (confirm("Deseja remover este item do carrinho?")) {
+      const nomeItem = carrinho[index].nome;
       carrinho.splice(index, 1);
+      mostrarNotificacao(`Removido: ${nomeItem}`, "erro");
     } else {
       carrinho[index].quantidade = 1; // Cancela e volta para 1
     }
@@ -238,17 +381,19 @@ function alterarQuantidade(index, mudanca) {
 
 function removerItem(index) {
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  const nomeItem = carrinho[index] ? carrinho[index].nome : "Item";
   carrinho.splice(index, 1); // Remove o item pelo índice
   localStorage.setItem("carrinho", JSON.stringify(carrinho));
   renderizarCarrinho();
   atualizarContadorCarrinho();
+  mostrarNotificacao(`Removido: ${nomeItem}`, "erro");
 }
 
 function finalizarPedidoWhatsApp() {
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
   if (carrinho.length === 0) {
-    alert("Seu carrinho está vazio!");
+    mostrarNotificacao("Seu carrinho está vazio!", "erro");
     return;
   }
 
@@ -280,40 +425,22 @@ function esvaziarCarrinho() {
     localStorage.removeItem("carrinho");
     renderizarCarrinho();
     atualizarContadorCarrinho();
+    mostrarNotificacao("Carrinho esvaziado!", "erro");
   }
 }
 
-function filtrarProdutos(categoria) {
-  const cards = document.querySelectorAll(".card");
-  const botoes = document.querySelectorAll(".btn-filtro");
-
-  // 1. Atualiza o aspeto visual dos botões
-  botoes.forEach((btn) => {
-    btn.classList.remove("ativo");
-    // Normaliza o texto para remover acentos (ex: Seleções -> selecoes) para comparar corretamente
-    const textoNormalizado = btn.innerText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    if (textoNormalizado === categoria || (categoria === "todos" && btn.innerText === "Todos")) {
-      btn.classList.add("ativo");
-    }
-  });
-
-  // 2. Filtra os produtos
-  cards.forEach((card) => {
-    const categoriaDoCard = card.getAttribute("data-categoria");
-
-    if (categoria === "todos" || categoriaDoCard === categoria) {
-      card.classList.remove("escondido");
-    } else {
-      card.classList.add("escondido");
-    }
-  });
-}
-
 function calcularPrecoPix() {
-  const precoElemento = document.querySelector(".preco-destaque");
+  // Busca o preço apenas dentro de .info (garante que é a página do produto e não um card da lista)
+  const precoElemento = document.querySelector(".info .preco-destaque");
   
   // Se não houver preço na página (ex: home), a função para aqui
   if (!precoElemento) return;
+
+  // Remove o aviso de Pix anterior para não duplicar ao atualizar
+  const pixAnterior = document.querySelector(".preco-pix");
+  if (pixAnterior) {
+    pixAnterior.remove();
+  }
 
   // Pega apenas o texto do preço (primeiro nó de texto), ignorando o preço antigo (span)
   const textoPreco = precoElemento.childNodes[0].textContent;
@@ -331,4 +458,127 @@ function calcularPrecoPix() {
     // Insere o elemento logo após o preço principal
     precoElemento.after(pPix);
   }
+}
+
+// Função para criar notificações elegantes (Toast)
+function mostrarNotificacao(mensagem, tipo = "sucesso") {
+  // Cria o container se não existir
+  let container = document.querySelector(".toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.classList.add("toast-container");
+    document.body.appendChild(container);
+  }
+
+  // Cria o elemento da notificação
+  const toast = document.createElement("div");
+  toast.classList.add("toast", tipo);
+  toast.innerHTML = mensagem; // Permite usar <br> ou <strong>
+
+  container.appendChild(toast);
+
+  // Remove após 4 segundos
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
+}
+
+// Função para filtrar categorias por abas (Clubes e Seleções)
+function filtrarCategoria(categoria, botao) {
+  // Atualiza o visual dos botões
+  const botoes = document.querySelectorAll(".btn-aba");
+  botoes.forEach((btn) => btn.classList.remove("ativo"));
+  botao.classList.add("ativo");
+
+  // Mostra ou esconde as seções
+  const secoes = document.querySelectorAll(".secao-categoria");
+  secoes.forEach((secao) => {
+    // Remove a animação anterior para reiniciar
+    secao.classList.remove("animar-aba");
+
+    // Se for 'todos' ou se o ID da seção for igual à categoria clicada
+    if (categoria === "todos" || secao.id === categoria) {
+      secao.style.display = "block";
+      // Truque para reiniciar a animação CSS (Reflow)
+      void secao.offsetWidth;
+      secao.classList.add("animar-aba");
+    } else {
+      secao.style.display = "none";
+    }
+  });
+}
+
+// --- Funções do Modal de Medidas ---
+function abrirModalMedidas() {
+  const modal = document.getElementById("modal-medidas");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
+
+function fecharModalMedidas() {
+  const modal = document.getElementById("modal-medidas");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+// --- Lógica do Carrossel ---
+let slideIndex = 0;
+let timer; // Variável para controlar o tempo automático
+
+function iniciarCarrossel() {
+  const slides = document.getElementsByClassName("carousel-slide");
+  if (slides.length === 0) return; // Se não estiver na home, sai da função
+  showSlides();
+}
+
+// Função para controle manual
+function mudarSlide(n) {
+  clearTimeout(timer); // Para o timer automático ao clicar
+  slideIndex += n - 1; // Ajusta o índice (subtrai 1 pois showSlides soma 1)
+  showSlides();
+}
+
+function currentSlide(n) {
+  clearTimeout(timer);
+  slideIndex = n - 1;
+  showSlides();
+}
+
+function showSlides() {
+  const slides = document.getElementsByClassName("carousel-slide");
+  const dots = document.getElementsByClassName("dot");
+
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+
+  slideIndex++;
+  if (slideIndex > slides.length) { slideIndex = 1; }
+  if (slideIndex < 1) { slideIndex = slides.length; } // Garante o loop ao voltar
+
+  for (let i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+
+  slides[slideIndex - 1].style.display = "block";
+  if (dots.length > 0) {
+    dots[slideIndex - 1].className += " active";
+  }
+
+  timer = setTimeout(showSlides, 4000); // Reinicia o timer
+}
+
+// Função para subir ao topo suavemente
+function subirTopo() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Função para alternar o Menu Hambúrguer
+function toggleMenu() {
+  const navLinks = document.querySelector(".nav-links");
+  const menuToggle = document.querySelector(".menu-toggle");
+  navLinks.classList.toggle("active");
+  if (menuToggle) menuToggle.classList.toggle("active");
 }
