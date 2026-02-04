@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
 
 /* Reset Global e Estilos Básicos */
 * {
@@ -114,7 +114,7 @@ body {
   right: 0; /* Ocupa a largura da search-box */
   background: white;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   overflow: hidden;
   display: none;
@@ -215,12 +215,16 @@ header.hero {
   padding: 15px;
   width: 250px;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(40, 167, 69, 0.4);
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(40, 167, 69, 0.4);
 }
 
 .card img {
@@ -697,6 +701,61 @@ footer {
   transition: 0.2s;
 }
 
+/* --- Área de Cupom no Carrinho --- */
+.carrinho-footer-cupom {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Alinha à direita */
+  gap: 10px;
+}
+
+.cupom-input-group {
+  display: flex;
+  gap: 5px;
+}
+
+.cupom-input-group input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  width: 150px;
+}
+
+.btn-aplicar-cupom {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-remover-cupom {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.resumo-desconto {
+  text-align: right;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.texto-desconto {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
 .btn-qtd:hover {
   background-color: #e0e0e0;
   border-color: #999;
@@ -886,19 +945,29 @@ footer {
   color: #333;
   padding: 15px 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-left: 5px solid #333;
   min-width: 250px;
   animation: slideIn 0.3s ease forwards;
   font-size: 0.95rem;
 }
 
-.toast.sucesso { border-left-color: #28a745; }
-.toast.erro { border-left-color: #dc3545; }
+.toast.sucesso {
+  border-left-color: #28a745;
+}
+.toast.erro {
+  border-left-color: #dc3545;
+}
 
 @keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* --- Títulos de Categorias (Página Clubes) --- */
@@ -949,7 +1018,7 @@ footer {
   background-color: #28a745;
   color: white;
   border-color: #28a745;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* --- Animação Suave para Abas --- */
@@ -977,7 +1046,7 @@ footer {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5); /* Fundo escuro transparente */
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro transparente */
   align-items: center;
   justify-content: center;
 }
@@ -989,7 +1058,7 @@ footer {
   width: 90%;
   max-width: 500px;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   animation: fadeInUp 0.3s;
   text-align: center;
 }
@@ -1015,7 +1084,8 @@ footer {
   margin-top: 15px;
 }
 
-.modal-content th, .modal-content td {
+.modal-content th,
+.modal-content td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
@@ -1052,13 +1122,13 @@ footer {
   font-family: "Russo One", sans-serif;
   font-style: italic;
   margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .banner-content p {
   font-size: 1.5rem;
   font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .btn-banner {
@@ -1070,7 +1140,9 @@ footer {
   border-radius: 25px;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.3s, background-color 0.3s;
+  transition:
+    transform 0.3s,
+    background-color 0.3s;
   font-size: 1rem;
   text-transform: uppercase;
 }
@@ -1081,7 +1153,8 @@ footer {
 }
 
 /* Setas de Navegação do Carrossel */
-.prev, .next {
+.prev,
+.next {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -1101,8 +1174,9 @@ footer {
   border-radius: 3px 0 0 3px;
 }
 
-.prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.8);
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* --- Botão Voltar ao Topo --- */
@@ -1120,8 +1194,10 @@ footer {
   padding: 15px;
   border-radius: 50%;
   font-size: 18px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
 }
 
 #btn-topo:hover {
@@ -1140,7 +1216,7 @@ footer {
   height: 12px;
   width: 12px;
   margin: 0 5px;
-  background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   display: inline-block;
   transition: background-color 0.6s ease;
@@ -1159,6 +1235,10 @@ footer {
 }
 
 @keyframes fade {
-  from {opacity: 0.4}
-  to {opacity: 1}
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
 }

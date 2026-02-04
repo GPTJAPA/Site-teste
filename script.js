@@ -16,20 +16,55 @@ document.addEventListener("DOMContentLoaded", () => {
         value = value.slice(0, 5) + "-" + value.slice(5, 8);
       }
       e.target.value = value;
+
+      // Calcula automaticamente quando o CEP estiver completo (8 dígitos)
+      if (value.replace(/\D/g, "").length === 8) {
+        calcularFrete();
+      }
     });
   }
 
   // --- Lógica da Barra de Pesquisa Global (Autocomplete) ---
-  
+
   // 1. Banco de dados simulado com todos os produtos do site
   const produtosDB = [
-    { nome: "Camisa Coritiba Titular 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" },
-    { nome: "Camisa Seleção Brasileira I 2026", url: "Pagina_produto_selecao_1.html", img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" },
-    { nome: "Camisa Seleção Brasil II 2026", url: "Pagina_produto.html", img: "imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp" },
-    { nome: "Camisa Real Madrid 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" }, // Imagem ilustrativa baseada no contexto
-    { nome: "Camisa Barcelona 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" },
-    { nome: "Camisa Manchester City 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Coritiba.jpeg" },
-    { nome: "Camisa França Titular 2024", url: "Pagina_produto.html", img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp" }
+    {
+      nome: "Camisa Coritiba Titular 2024",
+      url: "Pagina_produto.html",
+      img: "imagens/Camisas-time/Coritiba.jpeg",
+    },
+    {
+      nome: "Camisa Seleção Brasileira I 2026",
+      url: "Pagina_produto_selecao_1.html",
+      img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp",
+    },
+    {
+      nome: "Camisa Seleção Brasil II 2026",
+      url: "Pagina_produto.html",
+      img: "imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp",
+    },
+    {
+      nome: "Camisa Real Madrid 2024",
+      url: "Pagina_produto.html",
+      img: "imagens/Camisas-time/Coritiba.jpeg",
+    }, // Imagem ilustrativa baseada no contexto
+    {
+      nome: "Camisa Barcelona 2024",
+      url: "Pagina_produto.html",
+      img: "imagens/Camisas-time/Coritiba.jpeg",
+    },
+    {
+      nome: "Camisa Manchester City 2024",
+      url: "Pagina_produto.html",
+      img: "imagens/Camisas-time/Coritiba.jpeg",
+    },
+    {
+      nome: "Camisa França Titular 2024",
+      url: "Pagina_produto.html",
+      img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp",
+    },
+    // Para adicionar novo produto, coloque uma vírgula na linha anterior e adicione:
+    // { nome: "Nome do Produto", url: "pagina.html", img: "caminho/imagem.jpg" }
   ];
 
   const searchInput = document.getElementById("search-input");
@@ -43,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     searchInput.addEventListener("input", (e) => {
       // Normaliza o texto (remove acentos e põe em minúsculo)
-      const termo = e.target.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const termo = normalizarTexto(e.target.value);
       resultsContainer.innerHTML = "";
 
       if (termo.length === 0) {
@@ -52,12 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Filtra os produtos
-      const resultados = produtosDB.filter(produto => 
-        produto.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(termo)
+      const resultados = produtosDB.filter((produto) =>
+        normalizarTexto(produto.nome).includes(termo),
       );
 
       if (resultados.length > 0) {
-        resultados.forEach(produto => {
+        resultados.forEach((produto) => {
           const item = document.createElement("div");
           item.classList.add("search-item");
           item.innerHTML = `
@@ -65,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div>${produto.nome}</div>
           `;
           // Redireciona ao clicar
-          item.onclick = () => window.location.href = produto.url;
+          item.onclick = () => (window.location.href = produto.url);
           resultsContainer.appendChild(item);
         });
       } else {
@@ -112,7 +147,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnTopo = document.getElementById("btn-topo");
   window.addEventListener("scroll", () => {
     if (btnTopo) {
-      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+      if (
+        document.body.scrollTop > 300 ||
+        document.documentElement.scrollTop > 300
+      ) {
         btnTopo.style.display = "block";
       } else {
         btnTopo.style.display = "none";
@@ -133,6 +171,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // Sincroniza o carrinho entre abas diferentes (se alterar em uma, atualiza na outra)
+  window.addEventListener("storage", (event) => {
+    if (event.key === "carrinho") {
+      atualizarContadorCarrinho();
+      if (document.getElementById("lista-carrinho")) {
+        renderizarCarrinho();
+      }
+    }
+  });
 });
 
 function atualizarContadorCarrinho() {
@@ -168,7 +216,7 @@ function selecionarTamanho(elemento) {
   document.getElementById("tamanho-selecionado").innerText = elemento.innerText;
 }
 
-function calcularFrete() {
+async function calcularFrete() {
   const cepInput = document.getElementById("cep-input");
   const cep = cepInput.value.replace(/\D/g, ""); // Remove o traço para validar apenas números
   const campoResultado = document.getElementById("resultado-frete");
@@ -178,11 +226,42 @@ function calcularFrete() {
     return;
   }
 
-  // Simulação de cálculo
+  // Mostra feedback de carregamento
   campoResultado.classList.remove("resultado-oculto");
-  campoResultado.innerHTML = `
-        <p style="margin: 0; color: #28a745;"><strong>Entrega Padrão:</strong> R$ 15,00 (3-5 dias úteis)</p>
+  campoResultado.innerHTML = "Buscando endereço... 🚚";
+
+  try {
+    // Consulta a API ViaCEP
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const data = await response.json();
+
+    if (data.erro) {
+      campoResultado.innerHTML = `<p style="color: #dc3545;">CEP não encontrado.</p>`;
+      return;
+    }
+
+    // Lógica de preço baseada na região (UF)
+    const sul = ["PR", "SC", "RS"];
+    const sudeste = ["SP", "RJ", "MG", "ES"];
+
+    let preco = 30.0;
+    let prazo = "7-10 dias úteis";
+
+    if (sul.includes(data.uf)) {
+      preco = 15.0;
+      prazo = "3-5 dias úteis";
+    } else if (sudeste.includes(data.uf)) {
+      preco = 20.0;
+      prazo = "4-6 dias úteis";
+    }
+
+    campoResultado.innerHTML = `
+        <p style="font-size: 0.9rem; color: #555; margin-bottom: 5px;">📍 ${data.localidade} - ${data.uf}</p>
+        <p style="margin: 0; color: #28a745;"><strong>Entrega Padrão:</strong> R$ ${formatarPreco(preco)} (${prazo})</p>
     `;
+  } catch (error) {
+    campoResultado.innerHTML = `<p style="color: #dc3545;">Erro ao calcular frete.</p>`;
+  }
 }
 function alternarPersonalizacao(querPersonalizar) {
   const campos = document.getElementById("campos-personalizar");
@@ -194,20 +273,24 @@ function alternarPersonalizacao(querPersonalizar) {
   // Salva o preço base original na primeira vez que a função é chamada
   if (precoElemento && !precoElemento.dataset.precoBase) {
     const textoPreco = precoElemento.childNodes[0].textContent;
-    precoElemento.dataset.precoBase = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+    precoElemento.dataset.precoBase = parseFloat(
+      textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim(),
+    );
   }
 
-  const precoBase = precoElemento ? parseFloat(precoElemento.dataset.precoBase) : 0;
+  const precoBase = precoElemento
+    ? parseFloat(precoElemento.dataset.precoBase)
+    : 0;
 
   if (querPersonalizar) {
     campos.classList.remove("resultado-oculto");
     status.innerText = "Com personalização (+ R$ 25,00)";
     btnCom.classList.add("ativo");
     btnSem.classList.remove("ativo");
-    
+
     // Atualiza o preço visualmente na tela
     if (precoElemento) {
-      precoElemento.childNodes[0].textContent = `R$ ${(precoBase + 25).toFixed(2).replace(".", ",")} `;
+      precoElemento.childNodes[0].textContent = `R$ ${formatarPreco(precoBase + 25)} `;
     }
   } else {
     campos.classList.add("resultado-oculto");
@@ -217,7 +300,7 @@ function alternarPersonalizacao(querPersonalizar) {
 
     // Restaura o preço original visualmente
     if (precoElemento) {
-      precoElemento.childNodes[0].textContent = `R$ ${precoBase.toFixed(2).replace(".", ",")} `;
+      precoElemento.childNodes[0].textContent = `R$ ${formatarPreco(precoBase)} `;
     }
   }
 
@@ -228,7 +311,8 @@ function alternarPersonalizacao(querPersonalizar) {
 function finalizarCompra() {
   // 1. Validação (Antes do Loading)
   const areaPersonalizar = document.getElementById("campos-personalizar");
-  const isPersonalizado = !areaPersonalizar.classList.contains("resultado-oculto");
+  const isPersonalizado =
+    !areaPersonalizar.classList.contains("resultado-oculto");
   let nome = "";
   let numero = "";
 
@@ -245,7 +329,7 @@ function finalizarCompra() {
   // 2. Ativa o efeito de Loading
   const btn = document.querySelector(".btn-comprar");
   const textoOriginal = btn.innerText;
-  
+
   btn.innerText = "Adicionando... ⏳";
   btn.disabled = true;
   btn.style.opacity = "0.7";
@@ -265,10 +349,16 @@ function finalizarCompra() {
       precoFinal = parseFloat(precoElemento.dataset.precoBase);
     } else {
       const textoPreco = precoElemento.childNodes[0].textContent;
-      precoFinal = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+      precoFinal = parseFloat(
+        textoPreco
+          .replace("R$", "")
+          .replace(/\./g, "")
+          .replace(",", ".")
+          .trim(),
+      );
     }
 
-    const CUSTO_PERSONALIZACAO = 25.00;
+    const CUSTO_PERSONALIZACAO = 25.0;
     let detalhesPersonalizacao = "Sem personalização";
 
     if (isPersonalizado) {
@@ -311,10 +401,53 @@ function finalizarCompra() {
     btn.style.opacity = "1";
     btn.style.cursor = "pointer";
 
-    const precoFormatado = precoFinal.toFixed(2).replace(".", ",");
-    mostrarNotificacao(`Adicionado ao carrinho!<br><strong>${nomeProduto}</strong><br>Total: R$ ${precoFormatado}`, "sucesso");
-
+    const precoFormatado = formatarPreco(precoFinal);
+    mostrarNotificacao(
+      `Adicionado ao carrinho!<br><strong>${nomeProduto}</strong><br>Total: R$ ${precoFormatado}`,
+      "sucesso",
+    );
   }, 1000); // 1 segundo de delay
+}
+
+// --- Sistema de Cupons ---
+const cuponsValidos = {
+  BEMVINDO10: 0.1, // 10% de desconto
+  GPTSTORE: 0.15, // 15% de desconto
+};
+
+// Carrega a biblioteca de confetes dinamicamente
+const scriptConfete = document.createElement("script");
+scriptConfete.src =
+  "https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js";
+document.head.appendChild(scriptConfete);
+
+function aplicarCupom() {
+  const input = document.getElementById("input-cupom");
+  const codigo = input.value.trim().toUpperCase();
+
+  if (cuponsValidos[codigo]) {
+    localStorage.setItem("cupomAtivo", codigo);
+    mostrarNotificacao(`Cupom ${codigo} aplicado com sucesso!`, "sucesso");
+    renderizarCarrinho();
+
+    // Dispara a animação de confete
+    if (window.confetti) {
+      window.confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#28a745", "#ffffff", "#333333"], // Cores da marca
+      });
+    }
+  } else {
+    mostrarNotificacao("Cupom inválido ou expirado.", "erro");
+  }
+}
+
+function removerCupom() {
+  localStorage.removeItem("cupomAtivo");
+  renderizarCarrinho();
+  mostrarNotificacao("Cupom removido.", "erro");
 }
 
 function renderizarCarrinho() {
@@ -323,7 +456,7 @@ function renderizarCarrinho() {
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
   lista.innerHTML = "";
-  let total = 0;
+  let subtotal = 0;
 
   if (carrinho.length === 0) {
     lista.innerHTML = "<p>Seu carrinho está vazio.</p>";
@@ -333,7 +466,7 @@ function renderizarCarrinho() {
 
   carrinho.forEach((item, index) => {
     const qtd = item.quantidade || 1;
-    total += item.preco * qtd;
+    subtotal += item.preco * qtd;
     lista.innerHTML += `
             <div class="item-carrinho">
                 <div class="item-info">
@@ -341,7 +474,7 @@ function renderizarCarrinho() {
                     <div>
                         <h4>${item.nome}</h4>
                         <p>Tamanho: ${item.tamanho} | ${item.personalizacao}</p>
-                        <p><strong>R$ ${item.preco.toFixed(2).replace(".", ",")}</strong></p>
+                        <p><strong>R$ ${formatarPreco(item.preco)}</strong></p>
                     </div>
                 </div>
                 <div class="qtd-controls">
@@ -354,7 +487,27 @@ function renderizarCarrinho() {
         `;
   });
 
-  totalEl.innerText = total.toFixed(2).replace(".", ",");
+  // Lógica de Desconto
+  const cupomAtivo = localStorage.getItem("cupomAtivo");
+  let desconto = 0;
+  if (cupomAtivo && cuponsValidos[cupomAtivo]) {
+    desconto = subtotal * cuponsValidos[cupomAtivo];
+  }
+  const totalFinal = subtotal - desconto;
+
+  // Adiciona o campo de cupom ao final da lista
+  lista.innerHTML += `
+    <div class="carrinho-footer-cupom">
+        <div class="cupom-input-group">
+            <input type="text" id="input-cupom" placeholder="Cupom de desconto" value="${cupomAtivo || ""}">
+            <button class="btn-aplicar-cupom" onclick="aplicarCupom()">Aplicar</button>
+            ${cupomAtivo ? `<button class="btn-remover-cupom" onclick="removerCupom()" title="Remover cupom">❌</button>` : ""}
+        </div>
+        ${desconto > 0 ? `<div class="resumo-desconto"><p>Subtotal: R$ ${formatarPreco(subtotal)}</p><p class="texto-desconto">Desconto (${cupomAtivo}): - R$ ${formatarPreco(desconto)}</p></div>` : ""}
+    </div>
+  `;
+
+  totalEl.innerText = formatarPreco(totalFinal);
 }
 
 function alterarQuantidade(index, mudanca) {
@@ -408,10 +561,19 @@ function finalizarPedidoWhatsApp() {
     if (item.personalizacao && item.personalizacao !== "Sem personalização") {
       mensagem += `   Personalização: ${item.personalizacao}\n`;
     }
-    mensagem += `   Preço: R$ ${item.preco.toFixed(2).replace(".", ",")}\n\n`;
+    mensagem += `   Preço: R$ ${formatarPreco(item.preco)}\n\n`;
   });
 
-  mensagem += `💰 *Total: R$ ${total.toFixed(2).replace(".", ",")}*`;
+  // Verifica se tem cupom para o WhatsApp
+  const cupomAtivo = localStorage.getItem("cupomAtivo");
+  if (cupomAtivo && cuponsValidos[cupomAtivo]) {
+    const desconto = total * cuponsValidos[cupomAtivo];
+    mensagem += `🏷️ *Subtotal: R$ ${formatarPreco(total)}*\n`;
+    mensagem += `🎟️ *Cupom (${cupomAtivo}): - R$ ${formatarPreco(desconto)}*\n`;
+    total -= desconto;
+  }
+
+  mensagem += `💰 *Total Final: R$ ${formatarPreco(total)}*`;
 
   // Substitua pelo número da loja (com DDI 55 e DDD)
   const numeroWhatsApp = "5541995655320";
@@ -432,7 +594,7 @@ function esvaziarCarrinho() {
 function calcularPrecoPix() {
   // Busca o preço apenas dentro de .info (garante que é a página do produto e não um card da lista)
   const precoElemento = document.querySelector(".info .preco-destaque");
-  
+
   // Se não houver preço na página (ex: home), a função para aqui
   if (!precoElemento) return;
 
@@ -444,20 +606,35 @@ function calcularPrecoPix() {
 
   // Pega apenas o texto do preço (primeiro nó de texto), ignorando o preço antigo (span)
   const textoPreco = precoElemento.childNodes[0].textContent;
-  
+
   // Limpa a string: remove "R$", remove pontos de milhar e troca vírgula por ponto
-  const valorNumerico = parseFloat(textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+  const valorNumerico = parseFloat(
+    textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim(),
+  );
 
   if (!isNaN(valorNumerico)) {
     const valorPix = valorNumerico * 0.95; // Aplica 5% de desconto
-    
+
     const pPix = document.createElement("p");
     pPix.classList.add("preco-pix");
-    pPix.innerHTML = `R$ ${valorPix.toFixed(2).replace(".", ",")} com <strong>Pix</strong> (5% de desconto)`;
-    
+    pPix.innerHTML = `R$ ${formatarPreco(valorPix)} com <strong>Pix</strong> (5% de desconto)`;
+
     // Insere o elemento logo após o preço principal
     precoElemento.after(pPix);
   }
+}
+
+// Função auxiliar para formatar preço (R$)
+function formatarPreco(valor) {
+  return valor.toFixed(2).replace(".", ",");
+}
+
+// Função auxiliar para remover acentos e normalizar texto para busca
+function normalizarTexto(texto) {
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 // Função para criar notificações elegantes (Toast)
@@ -555,8 +732,12 @@ function showSlides() {
   }
 
   slideIndex++;
-  if (slideIndex > slides.length) { slideIndex = 1; }
-  if (slideIndex < 1) { slideIndex = slides.length; } // Garante o loop ao voltar
+  if (slideIndex > slides.length) {
+    slideIndex = 1;
+  }
+  if (slideIndex < 1) {
+    slideIndex = slides.length;
+  } // Garante o loop ao voltar
 
   for (let i = 0; i < dots.length; i++) {
     dots[i].className = dots[i].className.replace(" active", "");
@@ -572,7 +753,7 @@ function showSlides() {
 
 // Função para subir ao topo suavemente
 function subirTopo() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // Função para alternar o Menu Hambúrguer
