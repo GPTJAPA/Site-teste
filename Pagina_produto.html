@@ -61,9 +61,10 @@
             <p class="preco-destaque">R$ 199,90 <span class="preco-antigo">R$ 399,90</span></p>
 
             <div class="seletor-tamanho">
-                <p>Tamanho: <span id="tamanho-selecionado">P</span> <button class="btn-guia" onclick="abrirModalMedidas()">Guia de Medidas 📏</button></p>
+                <p>Tamanho: <span id="tamanho-selecionado">Selecione</span> <button class="btn-guia"
+                        onclick="abrirModalMedidas()">Guia de Medidas 📏</button></p>
                 <div class="botoes-tamanho">
-                    <button type="button" class="btn-tam ativo" onclick="selecionarTamanho(this)">P</button>
+                    <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">P</button>
                     <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">M</button>
                     <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">G</button>
                     <button type="button" class="btn-tam" onclick="selecionarTamanho(this)">GG</button>
@@ -116,39 +117,8 @@
         </div>
     </div>
 
-    <!-- Modal Guia de Medidas -->
-    <div id="modal-medidas" class="modal-container">
-        <div class="modal-content">
-            <span class="close-modal" onclick="fecharModalMedidas()">&times;</span>
-            <h3>Guia de Medidas</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tamanho</th>
-                        <th>Largura (cm)</th>
-                        <th>Altura (cm)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>P</td><td>50</td><td>70</td>
-                    </tr>
-                    <tr>
-                        <td>M</td><td>53</td><td>72</td>
-                    </tr>
-                    <tr>
-                        <td>G</td><td>56</td><td>74</td>
-                    </tr>
-                    <tr>
-                        <td>GG</td><td>59</td><td>76</td>
-                    </tr>
-                    <tr>
-                        <td>GGG</td><td>62</td><td>78</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <!-- Container para Produtos Relacionados -->
+    <div id="produtos-relacionados"></div>
 
     <footer>
         <div class="footer-container">
@@ -181,6 +151,26 @@
 
     <!-- Botão Voltar ao Topo -->
     <button onclick="subirTopo()" id="btn-topo" title="Voltar ao topo">⬆</button>
+
+    <!-- Menu Fixo Mobile -->
+    <div class="mobile-footer-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <span>🏠</span>
+            Início
+        </a>
+        <a href="clubes.html" class="mobile-nav-item">
+            <span>👕</span>
+            Clubes
+        </a>
+        <a href="carrinho.html" class="mobile-nav-item">
+            <span>🛒</span>
+            Carrinho
+        </a>
+        <a href="https://wa.me/5541995655320" target="_blank" class="mobile-nav-item">
+            <span>💬</span>
+            WhatsApp
+        </a>
+    </div>
 
     <!-- Conectando o arquivo de script externo -->
     <script src="script.js"></script>

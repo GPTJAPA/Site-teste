@@ -47,9 +47,48 @@
             Total: R$ <span id="valor-total">0,00</span>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
-            <button class="btn-esvaziar" onclick="esvaziarCarrinho()">Esvaziar Carrinho 🗑️</button>
-            <button class="btn-whatsapp" onclick="finalizarPedidoWhatsApp()">Finalizar Pedido no WhatsApp 📱</button>
+        <!-- Formulário de Dados do Cliente -->
+        <div class="dados-cliente-container">
+            <h3>Dados para Entrega e Pagamento</h3>
+
+            <div class="input-row">
+                <div class="input-group-carrinho">
+                    <label for="nome-cliente">Nome Completo *</label>
+                    <input type="text" id="nome-cliente" placeholder="Seu nome completo"
+                        oninput="localStorage.setItem('nomeCliente', this.value)">
+                </div>
+                <div class="input-group-carrinho">
+                    <label for="telefone-cliente">Telefone/WhatsApp *</label>
+                    <input type="tel" id="telefone-cliente" placeholder="(XX) 99999-9999"
+                        oninput="localStorage.setItem('telefoneCliente', this.value)">
+                </div>
+            </div>
+
+            <div class="input-group-carrinho">
+                <label for="endereco-cliente">Endereço Completo *</label>
+                <textarea id="endereco-cliente" rows="3"
+                    placeholder="Rua, Número, Bairro, Cidade - UF, CEP&#10;Complemento (Apto, Bloco, Ponto de referência)"
+                    oninput="localStorage.setItem('enderecoCliente', this.value)"></textarea>
+            </div>
+
+            <div class="input-group-carrinho">
+                <label for="pagamento-cliente">Forma de Pagamento *</label>
+                <select id="pagamento-cliente" onchange="localStorage.setItem('pagamentoCliente', this.value)">
+                    <option value="">Selecione...</option>
+                    <option value="Pix">Pix (5% de desconto)</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="carrinho-actions">
+            <button class="btn-continuar" onclick="window.location.href='index.html'">⬅ Continuar Comprando</button>
+            <div class="grupo-botoes-direita">
+                <button class="btn-esvaziar" onclick="esvaziarCarrinho()">Esvaziar Carrinho 🗑️</button>
+                <button class="btn-whatsapp" onclick="finalizarPedidoWhatsApp()">Finalizar Pedido no WhatsApp
+                    📱</button>
+            </div>
         </div>
     </div>
 
@@ -84,6 +123,26 @@
 
     <!-- Botão Voltar ao Topo -->
     <button onclick="subirTopo()" id="btn-topo" title="Voltar ao topo">⬆</button>
+
+    <!-- Menu Fixo Mobile -->
+    <div class="mobile-footer-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <span>🏠</span>
+            Início
+        </a>
+        <a href="clubes.html" class="mobile-nav-item">
+            <span>👕</span>
+            Clubes
+        </a>
+        <a href="carrinho.html" class="mobile-nav-item">
+            <span>🛒</span>
+            Carrinho
+        </a>
+        <a href="https://wa.me/5541995655320" target="_blank" class="mobile-nav-item">
+            <span>💬</span>
+            WhatsApp
+        </a>
+    </div>
 
     <script src="script.js"></script>
 </body>

@@ -1,6 +1,57 @@
+// --- Banco de Dados Global de Produtos ---
+// Lista de objetos que contém as informações básicas de cada produto para busca e exibição
+const produtosDB = [
+  {
+    nome: "Camisa Coritiba Titular 2024",
+    url: "Pagina_produto.html",
+    img: "imagens/Camisas-time/Coritiba.jpeg",
+    preco: 299.9,
+  },
+  {
+    nome: "Camisa Seleção Brasileira I 2026",
+    url: "Pagina_produto_selecao_1.html",
+    img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp",
+    preco: 299.9,
+  },
+  {
+    nome: "Camisa Seleção Brasil II 2026",
+    url: "Pagina_produto.html",
+    img: "imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp",
+    preco: 199.9,
+  },
+  {
+    nome: "Camisa Real Madrid 2024",
+    url: "Pagina_produto.html",
+    img: "imagens/Camisas-time/Coritiba.jpeg",
+    preco: 349.9,
+  },
+  {
+    nome: "Camisa Barcelona 2024",
+    url: "Pagina_produto.html",
+    img: "imagens/Camisas-time/Coritiba.jpeg",
+    preco: 349.9,
+  },
+  {
+    nome: "Camisa Manchester City 2024",
+    url: "Pagina_produto.html",
+    img: "imagens/Camisas-time/Coritiba.jpeg",
+    preco: 329.9,
+  },
+  {
+    nome: "Camisa França Titular 2024",
+    url: "Pagina_produto.html",
+    img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp",
+    preco: 299.9,
+  },
+];
+
 // Executa quando a página carrega para atualizar o número do carrinho
+// O evento DOMContentLoaded garante que o HTML foi totalmente carregado antes de rodar o script
 document.addEventListener("DOMContentLoaded", () => {
   atualizarContadorCarrinho();
+
+  // Carrega produtos relacionados se o container existir
+  exibirProdutosRelacionados();
 
   // Se estivermos na página do carrinho, renderiza os itens
   if (document.getElementById("lista-carrinho")) {
@@ -8,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Adiciona a máscara de CEP (00000-000)
+  // Formata o campo de CEP automaticamente enquanto o usuário digita
   const cepInput = document.getElementById("cep-input");
   if (cepInput) {
     cepInput.addEventListener("input", (e) => {
@@ -25,47 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Lógica da Barra de Pesquisa Global (Autocomplete) ---
-
-  // 1. Banco de dados simulado com todos os produtos do site
-  const produtosDB = [
-    {
-      nome: "Camisa Coritiba Titular 2024",
-      url: "Pagina_produto.html",
-      img: "imagens/Camisas-time/Coritiba.jpeg",
-    },
-    {
-      nome: "Camisa Seleção Brasileira I 2026",
-      url: "Pagina_produto_selecao_1.html",
-      img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp",
-    },
-    {
-      nome: "Camisa Seleção Brasil II 2026",
-      url: "Pagina_produto.html",
-      img: "imagens/Camisas-time/Seleção Brasileira 2/Seleção Brasil 2.webp",
-    },
-    {
-      nome: "Camisa Real Madrid 2024",
-      url: "Pagina_produto.html",
-      img: "imagens/Camisas-time/Coritiba.jpeg",
-    }, // Imagem ilustrativa baseada no contexto
-    {
-      nome: "Camisa Barcelona 2024",
-      url: "Pagina_produto.html",
-      img: "imagens/Camisas-time/Coritiba.jpeg",
-    },
-    {
-      nome: "Camisa Manchester City 2024",
-      url: "Pagina_produto.html",
-      img: "imagens/Camisas-time/Coritiba.jpeg",
-    },
-    {
-      nome: "Camisa França Titular 2024",
-      url: "Pagina_produto.html",
-      img: "imagens/Camisas-time/Seleção Brasileira 1/Frente.webp",
-    },
-    // Para adicionar novo produto, coloque uma vírgula na linha anterior e adicione:
-    // { nome: "Nome do Produto", url: "pagina.html", img: "caminho/imagem.jpg" }
-  ];
+  // Cria uma lista de sugestões abaixo do campo de busca baseada no que é digitado
 
   const searchInput = document.getElementById("search-input");
   const searchBox = document.querySelector(".search-box");
@@ -122,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Calcula e exibe o preço do Pix automaticamente
+  // Pega o preço principal e aplica 5% de desconto visualmente
   calcularPrecoPix();
 
   // Força o nome da personalização a ser maiúsculo enquanto digita
@@ -133,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Fecha o modal se clicar fora dele
+  // Melhora a usabilidade permitindo fechar janelas clicando no fundo escuro
   window.addEventListener("click", (event) => {
     const modal = document.getElementById("modal-medidas");
     if (event.target === modal) {
@@ -144,6 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
   iniciarCarrossel();
 
   // Lógica do Botão Voltar ao Topo
+  // Mostra o botão apenas quando o usuário rola a página para baixo
   const btnTopo = document.getElementById("btn-topo");
   window.addEventListener("scroll", () => {
     if (btnTopo) {
@@ -159,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Fecha o menu mobile automaticamente ao clicar em um link
+  // Melhora a experiência no celular, fechando o menu após a navegação
   const linksMenu = document.querySelectorAll(".nav-links a");
   const menuNav = document.querySelector(".nav-links");
   const menuToggle = document.querySelector(".menu-toggle");
@@ -172,7 +188,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Fecha o menu mobile ao clicar fora dele
+  // Detecta cliques fora da área do menu para fechá-lo
+  document.addEventListener("click", (event) => {
+    if (menuNav && menuToggle && menuNav.classList.contains("active")) {
+      if (
+        !menuNav.contains(event.target) &&
+        !menuToggle.contains(event.target)
+      ) {
+        menuNav.classList.remove("active");
+        menuToggle.classList.remove("active");
+      }
+    }
+  });
+
   // Sincroniza o carrinho entre abas diferentes (se alterar em uma, atualiza na outra)
+  // O evento 'storage' é disparado quando o localStorage muda em outra aba
   window.addEventListener("storage", (event) => {
     if (event.key === "carrinho") {
       atualizarContadorCarrinho();
@@ -181,8 +212,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // Restaura os dados do formulário do carrinho (se existirem)
+  // Preenche os campos automaticamente se o usuário já tiver digitado antes
+  if (document.getElementById("nome-cliente")) {
+    document.getElementById("nome-cliente").value =
+      localStorage.getItem("nomeCliente") || "";
+    document.getElementById("telefone-cliente").value =
+      localStorage.getItem("telefoneCliente") || "";
+    document.getElementById("endereco-cliente").value =
+      localStorage.getItem("enderecoCliente") || "";
+    document.getElementById("pagamento-cliente").value =
+      localStorage.getItem("pagamentoCliente") || "";
+  }
 });
 
+// Atualiza o número vermelho no ícone do carrinho no menu
 function atualizarContadorCarrinho() {
   // Recupera a quantidade salva no navegador ou usa 0 se não existir
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
@@ -197,6 +242,7 @@ function atualizarContadorCarrinho() {
   }
 }
 
+// Troca a imagem principal do produto ao clicar nas miniaturas
 function trocarImagem(enderecoDaImagem) {
   const imagemPrincipal = document.getElementById("imagemPrincipal");
   if (imagemPrincipal) {
@@ -204,6 +250,7 @@ function trocarImagem(enderecoDaImagem) {
   }
 }
 
+// Gerencia a seleção visual dos botões de tamanho (P, M, G...)
 function selecionarTamanho(elemento) {
   // Remove a classe 'ativo' de todos os botões
   const botoes = document.querySelectorAll(".btn-tam");
@@ -216,6 +263,11 @@ function selecionarTamanho(elemento) {
   document.getElementById("tamanho-selecionado").innerText = elemento.innerText;
 }
 
+// Variável global para armazenar o frete escolhido
+let freteSelecionado = 0;
+let tipoFreteSelecionado = "";
+
+// Consulta a API ViaCEP e calcula o frete baseado na região
 async function calcularFrete() {
   const cepInput = document.getElementById("cep-input");
   const cep = cepInput.value.replace(/\D/g, ""); // Remove o traço para validar apenas números
@@ -229,6 +281,9 @@ async function calcularFrete() {
   // Mostra feedback de carregamento
   campoResultado.classList.remove("resultado-oculto");
   campoResultado.innerHTML = "Buscando endereço... 🚚";
+
+  // Reseta o frete selecionado ao calcular novo CEP
+  freteSelecionado = 0;
 
   try {
     // Consulta a API ViaCEP
@@ -244,25 +299,92 @@ async function calcularFrete() {
     const sul = ["PR", "SC", "RS"];
     const sudeste = ["SP", "RJ", "MG", "ES"];
 
-    let preco = 30.0;
-    let prazo = "7-10 dias úteis";
+    let resultadoHTML = `
+        <p style="font-size: 0.9rem; color: #555; margin-bottom: 5px;">📍 ${data.localidade} - ${data.uf}</p>
+    `;
 
-    if (sul.includes(data.uf)) {
-      preco = 15.0;
-      prazo = "3-5 dias úteis";
-    } else if (sudeste.includes(data.uf)) {
-      preco = 20.0;
-      prazo = "4-6 dias úteis";
+    if (data.localidade === "Curitiba") {
+      resultadoHTML += `
+        <label class="item-frete">
+            <input type="radio" name="frete" value="12.00" onchange="selecionarFrete(this.value, 'Motoboy 🏍️')">
+            <span><strong>Motoboy 🏍️:</strong> R$ 12,00 (Entrega no mesmo dia)</span>
+        </label>
+        <label class="item-frete">
+            <input type="radio" name="frete" value="0.00" onchange="selecionarFrete(this.value, 'Retirada na Loja')">
+            <span><strong>🏪 Retirada na Loja:</strong> Grátis (Pronto em 2h)</span>
+        </label>
+      `;
+    } else {
+      let precoPAC, prazoPAC, precoSedex, prazoSedex;
+
+      if (sul.includes(data.uf)) {
+        precoPAC = 15.0;
+        prazoPAC = "5-7 dias úteis";
+        precoSedex = 25.0;
+        prazoSedex = "2-3 dias úteis";
+      } else if (sudeste.includes(data.uf)) {
+        precoPAC = 20.0;
+        prazoPAC = "6-8 dias úteis";
+        precoSedex = 35.0;
+        prazoSedex = "3-4 dias úteis";
+      } else {
+        precoPAC = 30.0;
+        prazoPAC = "8-12 dias úteis";
+        precoSedex = 60.0;
+        prazoSedex = "4-6 dias úteis";
+      }
+
+      resultadoHTML += `
+        <label class="item-frete">
+            <input type="radio" name="frete" value="${precoPAC}" onchange="selecionarFrete(this.value, 'Correios PAC')">
+            <span><strong>Correios (PAC):</strong> R$ ${formatarPreco(precoPAC)} (${prazoPAC})</span>
+        </label>
+        <label class="item-frete">
+            <input type="radio" name="frete" value="${precoSedex}" onchange="selecionarFrete(this.value, 'Sedex')">
+            <span><strong>Sedex:</strong> R$ ${formatarPreco(precoSedex)} (${prazoSedex})</span>
+        </label>
+      `;
     }
 
-    campoResultado.innerHTML = `
-        <p style="font-size: 0.9rem; color: #555; margin-bottom: 5px;">📍 ${data.localidade} - ${data.uf}</p>
-        <p style="margin: 0; color: #28a745;"><strong>Entrega Padrão:</strong> R$ ${formatarPreco(preco)} (${prazo})</p>
-    `;
+    // Adiciona o container para mostrar o total somado
+    resultadoHTML += `<div id="total-com-frete" class="total-frete-container"></div>`;
+
+    campoResultado.innerHTML = resultadoHTML;
   } catch (error) {
     campoResultado.innerHTML = `<p style="color: #dc3545;">Erro ao calcular frete.</p>`;
   }
 }
+
+// Atualiza a variável global quando o usuário clica em uma opção de frete (radio button)
+function selecionarFrete(valor, tipo) {
+  freteSelecionado = parseFloat(valor);
+  tipoFreteSelecionado = tipo;
+  atualizarTotalComFrete();
+}
+
+// Exibe o valor total (Produto + Frete) abaixo das opções de envio
+function atualizarTotalComFrete() {
+  const divTotal = document.getElementById("total-com-frete");
+  if (!divTotal || freteSelecionado === 0) return;
+
+  // Pega o preço atual do produto (já considerando personalização)
+  const precoElemento = document.querySelector(".preco-destaque");
+  let precoProduto = 0;
+
+  if (precoElemento) {
+    const textoPreco = precoElemento.childNodes[0].textContent;
+    precoProduto = parseFloat(
+      textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim(),
+    );
+  }
+
+  const totalFinal = precoProduto + freteSelecionado;
+
+  divTotal.style.display = "block";
+  divTotal.innerHTML = `Total com Frete: <strong>R$ ${formatarPreco(totalFinal)}</strong>`;
+}
+
+// Alterna entre "Com Personalização" e "Sem Personalização", ajustando o preço
 function alternarPersonalizacao(querPersonalizar) {
   const campos = document.getElementById("campos-personalizar");
   const status = document.getElementById("status-personalizacao");
@@ -306,9 +428,20 @@ function alternarPersonalizacao(querPersonalizar) {
 
   // Recalcula o valor do Pix com o novo preço exibido
   calcularPrecoPix();
+
+  // Atualiza o total com frete se já houver um frete selecionado
+  atualizarTotalComFrete();
 }
 
+// Função principal de adicionar ao carrinho
 function finalizarCompra() {
+  // Validação de Tamanho: Impede a compra se nenhum tamanho estiver selecionado
+  const btnTamanhoAtivo = document.querySelector(".btn-tam.ativo");
+  if (!btnTamanhoAtivo) {
+    mostrarNotificacao("Por favor, selecione um tamanho!", "erro");
+    return;
+  }
+
   // 1. Validação (Antes do Loading)
   const areaPersonalizar = document.getElementById("campos-personalizar");
   const isPersonalizado =
@@ -392,6 +525,15 @@ function finalizarCompra() {
       carrinho.push(produto);
     }
 
+    // Salvar Frete no LocalStorage se foi selecionado
+    if (freteSelecionado > 0 || tipoFreteSelecionado === "Retirada na Loja") {
+      const dadosFrete = {
+        valor: freteSelecionado,
+        tipo: tipoFreteSelecionado,
+      };
+      localStorage.setItem("dadosFrete", JSON.stringify(dadosFrete));
+    }
+
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
     atualizarContadorCarrinho();
 
@@ -410,6 +552,7 @@ function finalizarCompra() {
 }
 
 // --- Sistema de Cupons ---
+// --- Sistema de Cupons ---
 const cuponsValidos = {
   BEMVINDO10: 0.1, // 10% de desconto
   GPTSTORE: 0.15, // 15% de desconto
@@ -421,6 +564,7 @@ scriptConfete.src =
   "https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js";
 document.head.appendChild(scriptConfete);
 
+// Aplica o desconto se o cupom for válido e salva no localStorage
 function aplicarCupom() {
   const input = document.getElementById("input-cupom");
   const codigo = input.value.trim().toUpperCase();
@@ -444,16 +588,27 @@ function aplicarCupom() {
   }
 }
 
+// Remove o cupom ativo e recalcula o carrinho
 function removerCupom() {
   localStorage.removeItem("cupomAtivo");
   renderizarCarrinho();
   mostrarNotificacao("Cupom removido.", "erro");
 }
 
+// Remove o frete selecionado e recalcula o carrinho
+function removerFrete() {
+  localStorage.removeItem("dadosFrete");
+  renderizarCarrinho();
+  mostrarNotificacao("Frete removido.", "erro");
+}
+
+// Gera o HTML da lista de produtos na página do carrinho
 function renderizarCarrinho() {
   const lista = document.getElementById("lista-carrinho");
   const totalEl = document.getElementById("valor-total");
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  const btnWhatsapp = document.querySelector(".btn-whatsapp");
+  const btnEsvaziar = document.querySelector(".btn-esvaziar");
 
   lista.innerHTML = "";
   let subtotal = 0;
@@ -461,12 +616,48 @@ function renderizarCarrinho() {
   if (carrinho.length === 0) {
     lista.innerHTML = "<p>Seu carrinho está vazio.</p>";
     totalEl.innerText = "0,00";
+
+    // Desabilita o botão do WhatsApp e esconde o de esvaziar
+    if (btnWhatsapp) {
+      btnWhatsapp.disabled = true;
+      btnWhatsapp.style.opacity = "0.5";
+      btnWhatsapp.style.cursor = "not-allowed";
+    }
+    if (btnEsvaziar) {
+      btnEsvaziar.style.display = "none";
+    }
     return;
   }
 
+  // Habilita os botões se houver itens
+  if (btnWhatsapp) {
+    btnWhatsapp.disabled = false;
+    btnWhatsapp.style.opacity = "1";
+    btnWhatsapp.style.cursor = "pointer";
+  }
+  if (btnEsvaziar) {
+    btnEsvaziar.style.display = "block";
+  }
+
+  // 1. Calcula o subtotal antes para a barra de progresso
+  carrinho.forEach((item) => {
+    subtotal += item.preco * (item.quantidade || 1);
+  });
+
+  // 2. Barra de Progresso de Frete Grátis (Meta: R$ 299,00)
+  const LIMITE_FRETE = 299.0;
+  const percentual = Math.min((subtotal / LIMITE_FRETE) * 100, 100);
+  const falta = LIMITE_FRETE - subtotal;
+
+  if (subtotal >= LIMITE_FRETE) {
+    lista.innerHTML += `<div class="frete-gratis-box sucesso"><p>🎉 Parabéns! Você ganhou <strong>Frete Grátis</strong>!</p><div class="progress-bg"><div class="progress-fill" style="width: 100%;"></div></div></div>`;
+  } else {
+    lista.innerHTML += `<div class="frete-gratis-box"><p>Faltam <strong>R$ ${formatarPreco(falta)}</strong> para ganhar Frete Grátis!</p><div class="progress-bg"><div class="progress-fill" style="width: ${percentual}%;"></div></div></div>`;
+  }
+
+  // 3. Renderiza os itens
   carrinho.forEach((item, index) => {
     const qtd = item.quantidade || 1;
-    subtotal += item.preco * qtd;
     lista.innerHTML += `
             <div class="item-carrinho">
                 <div class="item-info">
@@ -493,7 +684,25 @@ function renderizarCarrinho() {
   if (cupomAtivo && cuponsValidos[cupomAtivo]) {
     desconto = subtotal * cuponsValidos[cupomAtivo];
   }
-  const totalFinal = subtotal - desconto;
+
+  // Lógica de Frete (Recupera do LocalStorage)
+  const dadosFrete = JSON.parse(localStorage.getItem("dadosFrete"));
+  let valorFrete = 0;
+  let htmlFrete = "";
+
+  if (dadosFrete) {
+    valorFrete = dadosFrete.valor;
+
+    // Verifica se atingiu a meta de Frete Grátis (R$ 299,00)
+    if (subtotal >= LIMITE_FRETE) {
+      valorFrete = 0;
+      htmlFrete = `<p>Frete (${dadosFrete.tipo}): <span style="color: #28a745; font-weight: bold;">GRÁTIS</span> <span style="text-decoration: line-through; font-size: 0.8em; color: #999;">R$ ${formatarPreco(dadosFrete.valor)}</span> <button class="btn-remover-frete" onclick="removerFrete()" title="Remover frete">❌</button></p>`;
+    } else {
+      htmlFrete = `<p>Frete (${dadosFrete.tipo}): + R$ ${formatarPreco(valorFrete)} <button class="btn-remover-frete" onclick="removerFrete()" title="Remover frete">❌</button></p>`;
+    }
+  }
+
+  const totalFinal = subtotal - desconto + valorFrete;
 
   // Adiciona o campo de cupom ao final da lista
   lista.innerHTML += `
@@ -504,12 +713,23 @@ function renderizarCarrinho() {
             ${cupomAtivo ? `<button class="btn-remover-cupom" onclick="removerCupom()" title="Remover cupom">❌</button>` : ""}
         </div>
         ${desconto > 0 ? `<div class="resumo-desconto"><p>Subtotal: R$ ${formatarPreco(subtotal)}</p><p class="texto-desconto">Desconto (${cupomAtivo}): - R$ ${formatarPreco(desconto)}</p></div>` : ""}
+        ${dadosFrete ? `<div class="resumo-desconto">${htmlFrete}</div>` : ""}
+    </div>
+  `;
+
+  // Campo de Observações
+  const obsSalva = localStorage.getItem("observacoesPedido") || "";
+  lista.innerHTML += `
+    <div class="observacoes-container">
+        <label for="observacoes-pedido">Observações do Pedido:</label>
+        <textarea id="observacoes-pedido" placeholder="Ex: Entregar na portaria, embrulhar para presente..." oninput="localStorage.setItem('observacoesPedido', this.value)">${obsSalva}</textarea>
     </div>
   `;
 
   totalEl.innerText = formatarPreco(totalFinal);
 }
 
+// Aumenta ou diminui a quantidade de um item no carrinho
 function alterarQuantidade(index, mudanca) {
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
   if (!carrinho[index].quantidade) carrinho[index].quantidade = 1;
@@ -532,6 +752,7 @@ function alterarQuantidade(index, mudanca) {
   atualizarContadorCarrinho();
 }
 
+// Remove um item específico do carrinho
 function removerItem(index) {
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
   const nomeItem = carrinho[index] ? carrinho[index].nome : "Item";
@@ -542,6 +763,7 @@ function removerItem(index) {
   mostrarNotificacao(`Removido: ${nomeItem}`, "erro");
 }
 
+// Monta a mensagem formatada e abre o WhatsApp
 function finalizarPedidoWhatsApp() {
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
@@ -550,7 +772,44 @@ function finalizarPedidoWhatsApp() {
     return;
   }
 
+  // Captura e Valida os Dados do Cliente
+  const nome = document.getElementById("nome-cliente")
+    ? document.getElementById("nome-cliente").value.trim()
+    : "";
+  const telefone = document.getElementById("telefone-cliente")
+    ? document.getElementById("telefone-cliente").value.trim()
+    : "";
+  const endereco = document.getElementById("endereco-cliente")
+    ? document.getElementById("endereco-cliente").value.trim()
+    : "";
+  const pagamento = document.getElementById("pagamento-cliente")
+    ? document.getElementById("pagamento-cliente").value
+    : "";
+
+  // Se os campos existirem na página (estamos no carrinho), valida o preenchimento
+  if (document.getElementById("nome-cliente")) {
+    if (!nome || !telefone || !endereco || !pagamento) {
+      mostrarNotificacao(
+        "Por favor, preencha todos os dados de entrega e pagamento!",
+        "erro",
+      );
+      // Foca no primeiro campo vazio
+      if (!nome) document.getElementById("nome-cliente").focus();
+      else if (!telefone) document.getElementById("telefone-cliente").focus();
+      else if (!endereco) document.getElementById("endereco-cliente").focus();
+      else if (!pagamento) document.getElementById("pagamento-cliente").focus();
+      return;
+    }
+  }
+
   let mensagem = "Olá! Gostaria de finalizar o seguinte pedido:\n\n";
+
+  // Adiciona Dados do Cliente no topo da mensagem
+  if (nome) {
+    mensagem += `👤 *DADOS DO CLIENTE:*\nNome: ${nome}\nTelefone: ${telefone}\nEndereço: ${endereco}\n\n`;
+  }
+
+  mensagem += `🛒 *RESUMO DO PEDIDO:*\n`;
   let total = 0;
 
   carrinho.forEach((item) => {
@@ -564,6 +823,8 @@ function finalizarPedidoWhatsApp() {
     mensagem += `   Preço: R$ ${formatarPreco(item.preco)}\n\n`;
   });
 
+  const subtotal = total; // Salva o subtotal para verificação de frete grátis
+
   // Verifica se tem cupom para o WhatsApp
   const cupomAtivo = localStorage.getItem("cupomAtivo");
   if (cupomAtivo && cuponsValidos[cupomAtivo]) {
@@ -573,7 +834,32 @@ function finalizarPedidoWhatsApp() {
     total -= desconto;
   }
 
-  mensagem += `💰 *Total Final: R$ ${formatarPreco(total)}*`;
+  // Adiciona o Frete na mensagem do WhatsApp
+  const dadosFrete = JSON.parse(localStorage.getItem("dadosFrete"));
+  if (dadosFrete) {
+    let valorFrete = dadosFrete.valor;
+    let textoFrete = `🚚 *Frete (${dadosFrete.tipo}): R$ ${formatarPreco(valorFrete)}*`;
+
+    if (subtotal >= 299.0) {
+      valorFrete = 0;
+      textoFrete = `🚚 *Frete (${dadosFrete.tipo}): GRÁTIS (Meta atingida)*`;
+    }
+    mensagem += `${textoFrete}\n`;
+    total += valorFrete;
+  }
+
+  mensagem += `💰 *Total Final: R$ ${formatarPreco(total)}*\n`;
+
+  // Adiciona Forma de Pagamento
+  if (pagamento) {
+    mensagem += `💳 *Forma de Pagamento:* ${pagamento}\n`;
+  }
+
+  // Adiciona Observações
+  const observacoes = localStorage.getItem("observacoesPedido");
+  if (observacoes) {
+    mensagem += `\n📝 *Observações:*\n${observacoes}`;
+  }
 
   // Substitua pelo número da loja (com DDI 55 e DDD)
   const numeroWhatsApp = "5541995655320";
@@ -582,15 +868,19 @@ function finalizarPedidoWhatsApp() {
   window.open(url, "_blank");
 }
 
+// Limpa todo o carrinho e dados associados
 function esvaziarCarrinho() {
   if (confirm("Tem certeza que deseja esvaziar todo o carrinho?")) {
     localStorage.removeItem("carrinho");
+    localStorage.removeItem("dadosFrete"); // Remove também o frete salvo
+    localStorage.removeItem("observacoesPedido"); // Remove observações
     renderizarCarrinho();
     atualizarContadorCarrinho();
     mostrarNotificacao("Carrinho esvaziado!", "erro");
   }
 }
 
+// Calcula o preço com 5% de desconto para exibição (Pix)
 function calcularPrecoPix() {
   // Busca o preço apenas dentro de .info (garante que é a página do produto e não um card da lista)
   const precoElemento = document.querySelector(".info .preco-destaque");
@@ -624,12 +914,12 @@ function calcularPrecoPix() {
   }
 }
 
-// Função auxiliar para formatar preço (R$)
+// Função auxiliar para formatar preço (R$) - Troca ponto por vírgula
 function formatarPreco(valor) {
   return valor.toFixed(2).replace(".", ",");
 }
 
-// Função auxiliar para remover acentos e normalizar texto para busca
+// Função auxiliar para remover acentos e normalizar texto para busca (ex: "Seleção" -> "selecao")
 function normalizarTexto(texto) {
   return texto
     .toLowerCase()
@@ -637,7 +927,7 @@ function normalizarTexto(texto) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-// Função para criar notificações elegantes (Toast)
+// Função para criar notificações elegantes (Toast) que aparecem no canto da tela
 function mostrarNotificacao(mensagem, tipo = "sucesso") {
   // Cria o container se não existir
   let container = document.querySelector(".toast-container");
@@ -660,7 +950,7 @@ function mostrarNotificacao(mensagem, tipo = "sucesso") {
   }, 4000);
 }
 
-// Função para filtrar categorias por abas (Clubes e Seleções)
+// Função para filtrar categorias por abas na página de Clubes
 function filtrarCategoria(categoria, botao) {
   // Atualiza o visual dos botões
   const botoes = document.querySelectorAll(".btn-aba");
@@ -686,11 +976,40 @@ function filtrarCategoria(categoria, botao) {
 }
 
 // --- Funções do Modal de Medidas ---
+// Cria o modal dinamicamente no HTML se ele não existir e o exibe
 function abrirModalMedidas() {
-  const modal = document.getElementById("modal-medidas");
-  if (modal) {
-    modal.style.display = "flex";
+  let modal = document.getElementById("modal-medidas");
+
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "modal-medidas";
+    modal.className = "modal-container";
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModalMedidas()">&times;</span>
+            <h3>Guia de Medidas</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tamanho</th>
+                        <th>Largura (cm)</th>
+                        <th>Altura (cm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>P</td><td>50</td><td>70</td></tr>
+                    <tr><td>M</td><td>53</td><td>72</td></tr>
+                    <tr><td>G</td><td>56</td><td>74</td></tr>
+                    <tr><td>GG</td><td>59</td><td>76</td></tr>
+                    <tr><td>GGG</td><td>62</td><td>78</td></tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+    document.body.appendChild(modal);
   }
+
+  modal.style.display = "flex";
 }
 
 function fecharModalMedidas() {
@@ -700,7 +1019,36 @@ function fecharModalMedidas() {
   }
 }
 
+// --- Função para Exibir Produtos Relacionados ---
+// Seleciona 3 produtos aleatórios do banco de dados e exibe no final da página
+function exibirProdutosRelacionados() {
+  const container = document.getElementById("produtos-relacionados");
+  if (!container) return;
+
+  // Embaralha e pega 3 produtos aleatórios
+  const produtosAleatorios = produtosDB
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3);
+
+  let html = `<h2 class="titulo-relacionados">Você também pode gostar</h2><div class="container-produtos">`;
+
+  produtosAleatorios.forEach((produto) => {
+    html += `
+        <div class="card">
+            <img src="${produto.img}" alt="${produto.nome}" onclick="window.location.href='${produto.url}'" style="cursor: pointer;">
+            <h3>${produto.nome}</h3>
+            <p class="preco-destaque">R$ ${formatarPreco(produto.preco)}</p>
+            <button onclick="window.location.href='${produto.url}'">Ver Detalhes</button>
+        </div>
+    `;
+  });
+
+  html += "</div>";
+  container.innerHTML = html;
+}
+
 // --- Lógica do Carrossel ---
+// Gerencia a troca de slides automática e manual na Home
 let slideIndex = 0;
 let timer; // Variável para controlar o tempo automático
 
@@ -751,12 +1099,12 @@ function showSlides() {
   timer = setTimeout(showSlides, 4000); // Reinicia o timer
 }
 
-// Função para subir ao topo suavemente
+// Função para rolar a página para o topo suavemente
 function subirTopo() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Função para alternar o Menu Hambúrguer
+// Função para abrir/fechar o Menu Hambúrguer no mobile
 function toggleMenu() {
   const navLinks = document.querySelector(".nav-links");
   const menuToggle = document.querySelector(".menu-toggle");
