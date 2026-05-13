@@ -262,14 +262,6 @@ header.hero {
   margin-bottom: 5px;
 }
 
-.card .preco-pix-card {
-  color: #28a745;
-  font-size: 1.1rem;
-  font-weight: normal;
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
 .card button {
   background-color: #007bff;
   color: white;
@@ -403,14 +395,6 @@ header.hero {
   color: #888;
   font-size: 1rem;
   margin-left: 10px;
-}
-
-/* Preço com desconto no Pix */
-.preco-pix {
-  color: #28a745;
-  font-size: 1rem;
-  margin-top: 5px;
-  font-weight: 500;
 }
 
 /* Seletor de Tamanho (Botões P, M, G) */

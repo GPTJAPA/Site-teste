@@ -1399,8 +1399,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Carrega produtos relacionados se o container existir
   exibirProdutosRelacionados();
 
-  // Adiciona o preço com desconto Pix nos cards de produtos
-  calcularPrecoPixCards();
+
 
   // Se estivermos na página do carrinho, renderiza os itens
   if (document.getElementById("lista-carrinho")) {
@@ -1495,9 +1494,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Calcula e exibe o preço do Pix automaticamente
-  // Pega o preço principal e aplica 5% de desconto visualmente
-  calcularPrecoPix();
+
 
   // Inicia o carrossel garantindo que o HTML da página já carregou
   iniciarCarrossel();
@@ -1934,9 +1931,6 @@ function alternarPersonalizacao(querPersonalizar) {
     }
   }
 
-  // Recalcula o valor do Pix com o novo preço exibido
-  calcularPrecoPix();
-
   // Atualiza o total com frete se já houver um frete selecionado
   atualizarTotalComFrete();
 }
@@ -2232,14 +2226,6 @@ function renderizarCarrinho() {
     }
   }
 
-  // Lógica de Desconto Pix
-  let descontoPix = 0;
-  const pagamentoSelecionado = localStorage.getItem("pagamentoCliente");
-  // Não aplica o desconto de Pix se o cupom AMIGOSDPADILHA estiver ativo
-  if (pagamentoSelecionado === "Pix" && cupomAtivo !== "AMIGOSDPADILHA") {
-    descontoPix = (subtotal - desconto) * 0.05;
-  }
-
   // Lógica de Frete (Recupera do LocalStorage)
   const dadosFrete = obterFreteSalvo();
   let valorFrete = 0;
@@ -2257,7 +2243,7 @@ function renderizarCarrinho() {
     }
   }
 
-  const totalFinal = subtotal - desconto - descontoPix + valorFrete;
+  const totalFinal = subtotal - desconto + valorFrete;
 
   // Adiciona o campo de cupom ao final da lista
   lista.innerHTML += `
@@ -2268,7 +2254,6 @@ function renderizarCarrinho() {
             ${cupomAtivo ? `<button class="btn-remover-cupom" onclick="removerCupom()" title="Remover cupom">❌</button>` : ""}
         </div>
         ${desconto > 0 ? `<div class="resumo-desconto"><p>Subtotal: R$ ${formatarPreco(subtotal)}</p><p class="texto-desconto">Desconto (${cupomAtivo}): - R$ ${formatarPreco(desconto)}</p></div>` : ""}
-        ${descontoPix > 0 ? `<div class="resumo-desconto"><p class="texto-desconto">Desconto Pix (5%): - R$ ${formatarPreco(descontoPix)}</p></div>` : ""}
         ${dadosFrete ? `<div class="resumo-desconto">${htmlFrete}</div>` : ""}
     </div>
   `;
@@ -2397,14 +2382,6 @@ function finalizarPedidoWhatsApp() {
     total -= desconto;
   }
 
-  // Verifica desconto Pix
-  // Não aplica o desconto de Pix se o cupom AMIGOSDPADILHA estiver ativo
-  if (pagamento === "Pix" && cupomAtivo !== "AMIGOSDPADILHA") {
-    const descontoPix = total * 0.05;
-    mensagem += `💸 *Desconto Pix (5%): - R$ ${formatarPreco(descontoPix)}*\n`;
-    total -= descontoPix;
-  }
-
   // Adiciona o Frete na mensagem do WhatsApp
   const dadosFrete = obterFreteSalvo();
   if (dadosFrete) {
@@ -2449,70 +2426,6 @@ function esvaziarCarrinho() {
     atualizarContadorCarrinho();
     mostrarNotificacao("Carrinho esvaziado!", "erro");
   }
-}
-
-// Calcula o preço com 5% de desconto para exibição (Pix)
-function calcularPrecoPix() {
-  // Restringido apenas para a div .info da página de produto
-  const precoElemento = document.querySelector(".info .preco-destaque");
-  if (!precoElemento) return;
-
-  const pixAnterior = document.querySelector(".preco-pix");
-  if (pixAnterior) {
-    pixAnterior.remove();
-  }
-
-  let precoBase = 0;
-  if (precoElemento.dataset.precoBase) {
-    precoBase = parseFloat(precoElemento.dataset.precoBase);
-  } else {
-    const textoPreco = precoElemento.childNodes[0]
-      ? precoElemento.childNodes[0].textContent
-      : precoElemento.textContent;
-    precoBase = parseFloat(
-      textoPreco.replace("R$", "").replace(/\./g, "").replace(",", ".").trim(),
-    );
-  }
-
-  const precoPix = precoBase * 0.95;
-
-  const divPrecoPix = document.createElement("div");
-  divPrecoPix.classList.add("preco-pix");
-  divPrecoPix.innerHTML = `<strong>R$ ${formatarPreco(precoPix)}</strong> no Pix (5% off)`;
-
-  precoElemento.parentNode.insertBefore(divPrecoPix, precoElemento.nextSibling);
-}
-
-// Adiciona o valor do Pix nos cards de listagem de produtos (VERSÃO CORRIGIDA)
-function calcularPrecoPixCards() {
-  const cards = document.querySelectorAll(".card");
-
-  cards.forEach((card) => {
-    const precoDestaque = card.querySelector(".preco-destaque");
-    if (!precoDestaque) return;
-
-    // Evita duplicar se o preço pix já tiver sido adicionado neste card
-    if (card.querySelector(".preco-pix-card")) return;
-
-    const textoPreco = precoDestaque.textContent;
-    const precoBase = parseFloat(
-      textoPreco.replace(/[^\d,]/g, "").replace(",", "."),
-    );
-
-    if (!isNaN(precoBase)) {
-      const precoPix = precoBase * 0.95;
-
-      const precoPixElemento = document.createElement("p");
-      precoPixElemento.className = "preco-pix-card";
-      precoPixElemento.innerHTML = `<strong>R$ ${formatarPreco(precoPix)}</strong> no Pix (5% off)`;
-
-      // Insere o preço do pix logo após o preço original
-      precoDestaque.parentNode.insertBefore(
-        precoPixElemento,
-        precoDestaque.nextSibling,
-      );
-    }
-  });
 }
 
 // Função auxiliar para formatar preço (R$) - Troca ponto por vírgula
@@ -2634,12 +2547,11 @@ function exibirProdutosRelacionados() {
   let html = `<h2 class="titulo-relacionados">Você também pode gostar</h2><div class="container-produtos">`;
 
   produtosAleatorios.forEach((produto) => {
-    const precoPix = produto.preco * 0.95;
     html += `
         <div class="card">
             <img src="${produto.img}" alt="${produto.nome}" onclick="window.location.href='${produto.url}'" style="cursor: pointer;">
             <h3>${produto.nome}</h3>
-            <p class="preco-pix-card"><strong>R$ ${formatarPreco(precoPix)}</strong> no Pix (5% off)</p>
+            <p class="preco-destaque">R$ ${formatarPreco(produto.preco)}</p>
             <button onclick="window.location.href='${produto.url}'">Ver Detalhes</button>
         </div>
     `;

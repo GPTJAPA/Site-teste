@@ -12,7 +12,6 @@ Este projeto é um e-commerce front-end interativo focado em oferecer uma ótima
   - Adição, alteração de quantidade e remoção de itens.
   - Barra de progresso visual para atingir **Frete Grátis**.
   - Sistema de **cupons de desconto** com animação comemorativa.
-  - Aplicação de desconto automático de 5% para pagamentos via **Pix**.
   - Uso do `localStorage` para salvar o carrinho, dados do cliente e opções de frete, para que nada seja perdido se a página for recarregada.
 - **Cálculo de Frete (ViaCEP):** Integração com a API do ViaCEP para buscar automaticamente a cidade e estado do cliente, simulando valores e prazos de entrega baseados na região.
 - **Finalização via WhatsApp:** Os dados do pedido (itens escolhidos, valores, descontos, frete e dados de entrega do cliente) são empacotados em uma mensagem formatada e enviados diretamente para o WhatsApp da loja.
@@ -39,6 +38,7 @@ O projeto foi construído utilizando tecnologias web fundamentais, mantendo o c�
 - `style.css`: Arquivo central com todo o estilo visual e responsivo da loja.
 - `script.js`: Arquivo centralizado contendo o banco de dados simulado (`produtosDB`) e todas as funções e eventos de interatividade.
 
+<<<<<<< HEAD
 ## 💻 Como Executar o Projeto Localmente
 
 Como a aplicação baseia-se puramente em tecnologias Front-end do lado do cliente, rodar o projeto é extremamente simples:
@@ -49,6 +49,8 @@ Como a aplicação baseia-se puramente em tecnologias Front-end do lado do clien
 4. Dê um duplo clique no arquivo `index.html` para abri-lo no seu navegador padrão.
 
 > **Dica para desenvolvedores:** Se você utiliza o **Visual Studio Code**, instale a extensão Live Server e abra o projeto por ela para ter atualizações automáticas na tela ao salvar os arquivos.
+=======
+>>>>>>> b2c1311e1bb1810724439cfe250bd32cda034f9e
 
 ## 📞 Contato
 
@@ -56,4 +58,8 @@ Caso tenha dúvidas, sugestões ou interesse nos produtos, entre em contato atra
 
 - **WhatsApp:** (41) 99565-5320
 - **Email:** gptstoree@gmail.com
+<<<<<<< HEAD
 - **Instagram:** @gpt_storee
+=======
+- **Instagram:** @gpt_storee
+>>>>>>> b2c1311e1bb1810724439cfe250bd32cda034f9e
